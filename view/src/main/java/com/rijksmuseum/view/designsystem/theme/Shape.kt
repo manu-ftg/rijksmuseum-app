@@ -1,4 +1,4 @@
-package com.rijksmuseum.view.theme
+package com.rijksmuseum.view.designsystem.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

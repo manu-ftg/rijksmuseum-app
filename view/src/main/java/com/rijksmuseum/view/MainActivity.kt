@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
-import com.rijksmuseum.view.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -48,7 +48,7 @@ data class ObjectEntity(
     @Json(name = "title")
     val title: String? = null,
     @Json(name = "webImage")
-    val webImage: ObjectImageEntity? = null
+    val webImage: ObjectImageEntity? = null,
 )
 
 @JsonClass(generateAdapter = true)

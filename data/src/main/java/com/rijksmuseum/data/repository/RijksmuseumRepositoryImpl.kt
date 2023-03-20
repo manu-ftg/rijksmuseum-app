@@ -1,7 +1,7 @@
 package com.rijksmuseum.data.repository
 
 import com.rijksmuseum.data.datasource.remote.RijksmuseumRemoteDatasource
-import com.rijksmuseum.data.mapper.DomainMapper.toDomain
+import com.rijksmuseum.data.mapper.toDomain
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
 import kotlinx.coroutines.Dispatchers

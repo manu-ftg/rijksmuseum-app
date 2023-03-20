@@ -5,5 +5,6 @@ data class ObjectModel(
     val imageUrl: String?,
     val longTitle: String,
     val objectNumber: String,
-    val title: String
+    val title: String,
+    val artist: String
 )

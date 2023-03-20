@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.rijksmuseum.view.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
 fun DetailsScreen(objectId: String) {
