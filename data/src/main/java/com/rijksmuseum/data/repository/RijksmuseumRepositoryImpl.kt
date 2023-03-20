@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class RijksmseumRepositoryImpl(
+class RijksmuseumRepositoryImpl(
     private val remoteDatasource: RijksmuseumRemoteDatasource
 ): RijksmuseumRepository {
 

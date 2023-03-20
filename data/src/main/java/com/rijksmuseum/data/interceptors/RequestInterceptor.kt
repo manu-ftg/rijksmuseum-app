@@ -13,7 +13,7 @@ class RequestInterceptor(
 
     companion object {
         private const val API_KEY_KEY = "key"
-        private const val CULTURE_KEY = "{culture}"
+        private const val CULTURE_KEY = "culture_key"
     }
 
     private val params = mapOf(

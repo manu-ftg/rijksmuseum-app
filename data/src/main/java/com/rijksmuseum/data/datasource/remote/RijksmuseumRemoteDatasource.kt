@@ -6,7 +6,7 @@ import retrofit2.http.Query
 
 interface RijksmuseumRemoteDatasource {
 
-    @GET("/collection?s=artist")
+    @GET("collection?s=artist")
     suspend fun getObjects(
         @Query("p") pageNumber: Int = 0,
         @Query("ps") pageSize: Int = 10,

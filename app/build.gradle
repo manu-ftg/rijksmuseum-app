@@ -28,7 +28,7 @@ android {
             minifyEnabled false
             shrinkResources false
             buildConfigField "String", "API_KEY", '"0fiuZFh4"'
-            buildConfigField "String", "BASE_URL", '"https://www.rijksmuseum.nl/api/{culture}"'
+            buildConfigField "String", "BASE_URL", '"https://www.rijksmuseum.nl/api/culture_key/"'
         }
         release {
             shrinkResources true
@@ -36,7 +36,7 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_KEY", '"0fiuZFh4"'
-            buildConfigField "String", "BASE_URL", '"https://www.rijksmuseum.nl/api/{culture}"'
+            buildConfigField "String", "BASE_URL", '"https://www.rijksmuseum.nl/api/culture_key/"'
         }
     }
     compileOptions {
