@@ -15,7 +15,7 @@ fun Map<String, List<ObjectModel>>.toList(): List<ObjectItemDisplay> {
             )
         }
         add(ObjectItemDisplay.LoaderItem)
-    }
+    }.distinctBy { it.key }
 }
 
 fun ObjectModel.toDisplay(): ObjectItemDisplay.ObjectItem {

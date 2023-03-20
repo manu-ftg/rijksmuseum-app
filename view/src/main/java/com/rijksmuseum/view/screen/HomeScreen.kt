@@ -57,7 +57,10 @@ fun HomeContent(
             Spacer(modifier = Modifier.size(24.dp))
 
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                itemsIndexed(state.objectsList) { index, item ->
+                itemsIndexed(
+                    items = state.objectsList,
+                    key = { _, item -> item.key }
+                ) { index, item ->
                     when (item) {
                         is ObjectItemDisplay.HeaderItem -> {
                             HeaderItemComponent(item)

@@ -1,9 +1,9 @@
 package com.rijksmuseum.presentation.display
 
-sealed class ObjectItemDisplay {
-    data class HeaderItem(val artist: String): ObjectItemDisplay()
+sealed class ObjectItemDisplay(val key: String) {
+    data class HeaderItem(val artist: String): ObjectItemDisplay("${artist}_key")
 
-    object LoaderItem: ObjectItemDisplay()
+    object LoaderItem: ObjectItemDisplay("loader_key")
 
     data class ObjectItem(
         val id: String,
@@ -11,5 +11,5 @@ sealed class ObjectItemDisplay {
         val artist: String,
         val objectNumber: String,
         val imageUrl: String? = null
-    ): ObjectItemDisplay()
+    ): ObjectItemDisplay(id)
 }
