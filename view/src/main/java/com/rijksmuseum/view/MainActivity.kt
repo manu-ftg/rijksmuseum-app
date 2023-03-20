@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RijksmuseumTheme {
                 RijksmuseumNavHost()
+                RijksmuseumApp()
             }
         }
     }
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
 )
 fun MainActivityLightPreview() {
     RijksmuseumTheme {
-        RijksmuseumNavHost()
+        RijksmuseumApp()
     }
 }
 
@@ -40,6 +41,6 @@ fun MainActivityLightPreview() {
 )
 fun MainActivityDarkPreview() {
     RijksmuseumTheme {
-        RijksmuseumNavHost()
+        RijksmuseumApp()
     }
 }

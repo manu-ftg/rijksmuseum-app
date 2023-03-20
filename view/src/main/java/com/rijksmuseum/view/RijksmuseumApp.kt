@@ -6,13 +6,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.rijksmuseum.view.designsystem.component.TopBarComponent
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
 
 @Composable
 fun RijksmuseumApp(
     navController: NavHostController = rememberNavController(),
 ) {
-    Scaffold() { paddingValues ->
+    Scaffold(
+        topBar = {
+            TopBarComponent(navController)
+        }
+    ) { paddingValues ->
         RijksmuseumNavHost(
             modifier = Modifier.padding(paddingValues),
             navController = navController
