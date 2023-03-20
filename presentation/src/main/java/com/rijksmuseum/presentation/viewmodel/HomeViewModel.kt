@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
 
-    private val objectsMap = mutableMapOf<String, MutableList<ObjectModel>>()
+    private val _objectsMap = MutableStateFlow(mutableMapOf<String, MutableList<ObjectModel>>())
 
     init {
         initialize()
@@ -48,18 +48,18 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .map { objects ->
-                    objects.forEach {
-                        if (objectsMap.containsKey(it.artist)) {
-                            objectsMap[it.artist]?.add(it)
+                    objects.forEach { objectItem ->
+                        if (_objectsMap.value.containsKey(objectItem.artist)) {
+                            _objectsMap.value[objectItem.artist]?.add(objectItem)
                         } else {
-                            objectsMap[it.artist] = mutableListOf(it)
+                            _objectsMap.value[objectItem.artist] = mutableListOf(objectItem)
                         }
                     }
                     _state.value.copy(
-                        objectsList = objectsMap.toList(),
                         isLoading = false,
                         isPaging = false,
-                        currentPage = _state.value.currentPage + 1
+                        currentPage = _state.value.currentPage + 1,
+                        objectsList = _objectsMap.value.toList()
                     )
                 }.collect(_state)
         }
@@ -73,8 +73,8 @@ class HomeViewModel @Inject constructor(
 }
 
 data class HomeState(
-    val objectsList: List<ObjectItemDisplay> = emptyList(),
     val isLoading: Boolean = false,
     val isPaging: Boolean = false,
-    val currentPage: Int = 0
+    val currentPage: Int = 0,
+    val objectsList: List<ObjectItemDisplay> = listOf(),
 )

@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -52,20 +52,12 @@ fun HomeContent(
                 .padding(top = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Home Screen", fontSize = 24.sp)
+            Text(text = "Rijks Museum", fontSize = 24.sp)
 
             Spacer(modifier = Modifier.size(24.dp))
 
-            Text(text = "This is a button to navigate to detail screen")
-
-            Button(onClick = {
-                navigateToDetailScreen("id test")
-            }) {
-                Text(text = "Navigate to detail screen")
-            }
-
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(state.objectsList) { item ->
+                itemsIndexed(state.objectsList) { index, item ->
                     when (item) {
                         is ObjectItemDisplay.HeaderItem -> {
                             HeaderItemComponent(item)
@@ -82,6 +74,12 @@ fun HomeContent(
                             }
                         }
                     }
+
+                    if (index == state.objectsList.size - 2) {
+                        LaunchedEffect(index) {
+                            onLoadingItemReached()
+                        }
+                    }
                 }
             }
         }
@@ -96,7 +94,7 @@ fun HomeContent(
 @Composable
 fun HomePreview() {
     RijksmuseumTheme {
-        HomeContent(HomeState(listOf()), {}) {}
+        HomeContent(HomeState(), {}) {}
     }
 }
 
@@ -104,6 +102,6 @@ fun HomePreview() {
 @Composable
 fun HomeIsLoadingPreview() {
     RijksmuseumTheme {
-        HomeContent(HomeState(listOf(), isLoading = true), {}) {}
+        HomeContent(HomeState(isLoading = true), {}) {}
     }
 }

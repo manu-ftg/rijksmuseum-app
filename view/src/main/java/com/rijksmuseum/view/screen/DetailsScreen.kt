@@ -20,7 +20,7 @@ fun DetailsScreen(objectId: String) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Details Screen $objectId", fontSize = 24.sp)
+        Text(text = "Details Screen: $objectId", fontSize = 24.sp)
     }
 }
 
