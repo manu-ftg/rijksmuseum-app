@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="top_bar_title">Rijksmuseum App</string>
+    <color name="ic_launcher_background">#40474F</color>
 </resources>

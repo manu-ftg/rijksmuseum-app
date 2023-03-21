@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -22,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.rijksmuseum.presentation.display.ObjectItemDisplay
 import com.rijksmuseum.view.R
@@ -31,7 +31,7 @@ import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 @Composable
 fun ObjectItemComponent(
     item: ObjectItemDisplay.ObjectItem,
-    onClick: () -> Unit
+    onClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -47,7 +47,7 @@ fun ObjectItemComponent(
         Row(
             modifier = Modifier
                 .clickable {
-                    onClick()
+                    onClick(item.objectNumber)
                 }
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth(),
@@ -90,15 +90,17 @@ fun ObjectItemComponent(
 @Composable
 fun ObjectItemPreview() {
     RijksmuseumTheme {
-        ObjectItemComponent(
-            item = ObjectItemDisplay.ObjectItem(
-                "Id",
-                "This is the title",
-                "This is the artist",
-                "1243234243"
-            ),
-            onClick = {}
-        )
+        Surface {
+            ObjectItemComponent(
+                item = ObjectItemDisplay.ObjectItem(
+                    "Id",
+                    "This is the title",
+                    "This is the artist",
+                    "1243234243"
+                ),
+                onClick = {}
+            )
+        }
     }
 }
 
@@ -106,14 +108,16 @@ fun ObjectItemPreview() {
 @Composable
 fun ObjectItemDarkPreview() {
     RijksmuseumTheme {
-        ObjectItemComponent(
-            item = ObjectItemDisplay.ObjectItem(
-                "Id",
-                "This is the title",
-                "This is the artist",
-                "1243234243"
-            ),
-            onClick = {}
-        )
+        Surface {
+            ObjectItemComponent(
+                item = ObjectItemDisplay.ObjectItem(
+                    "Id",
+                    "This is the title",
+                    "This is the artist",
+                    "1243234243"
+                ),
+                onClick = {}
+            )
+        }
     }
 }

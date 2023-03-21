@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +34,9 @@ fun LoaderItemComponent() {
 @Composable
 fun LoaderItemPreview() {
     RijksmuseumTheme {
-        LoaderItemComponent()
+        Surface {
+            LoaderItemComponent()
+        }
     }
 }
 
@@ -41,6 +44,8 @@ fun LoaderItemPreview() {
 @Composable
 fun LoaderItemDarkPreview() {
     RijksmuseumTheme {
-        LoaderItemComponent()
+        Surface {
+            LoaderItemComponent()
+        }
     }
 }

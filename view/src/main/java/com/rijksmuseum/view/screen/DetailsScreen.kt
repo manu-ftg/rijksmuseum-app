@@ -1,24 +1,18 @@
 package com.rijksmuseum.view.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,38 +21,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rijksmuseum.presentation.display.ObjectDisplay
-import com.rijksmuseum.presentation.viewmodel.DetailsState
+import com.rijksmuseum.presentation.display.ScreenState
 import com.rijksmuseum.presentation.viewmodel.DetailsViewModel
 import com.rijksmuseum.view.R
+import com.rijksmuseum.view.designsystem.component.dialog.DialogComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
 fun DetailsScreen(
-    viewModel: DetailsViewModel = hiltViewModel()
+    viewModel: DetailsViewModel = hiltViewModel(),
+    navigateBack: () -> Unit
 ) {
-    val state: DetailsState by viewModel.state.collectAsState()
+    val state: ScreenState<ObjectDisplay> by viewModel.state.collectAsState()
 
-
-
-    DetailsContent(state)
+    DetailsContent(state = state, navigateBack = navigateBack)
 }
 
 @Composable
 fun DetailsContent(
-    state: DetailsState
+    state: ScreenState<ObjectDisplay>,
+    navigateBack: () -> Unit = {}
 ) {
     when (state) {
-        is DetailsState.Error -> {
-
+        is ScreenState.Error -> {
+            DialogComponent(
+                title = "Error",
+                subtitle = state.message ?: "There was a problem loading the information",
+                buttonText = "Ok",
+                onClick = navigateBack
+            )
         }
-        is DetailsState.Loaded -> ObjectDetailsContent(state.objectDisplay)
-        DetailsState.Loading -> {
+        is ScreenState.Loaded -> ObjectDetailsContent(state.content)
+        ScreenState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     modifier = Modifier.padding(24.dp),
@@ -126,10 +126,12 @@ fun ObjectDetailsContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4)
 @Composable
 fun DetailsScreenPreview() {
     RijksmuseumTheme {
-        DetailsScreen()
+        DetailsContent(ScreenState.Error())
     }
 }

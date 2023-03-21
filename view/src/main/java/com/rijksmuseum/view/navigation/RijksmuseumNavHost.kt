@@ -33,7 +33,11 @@ fun RijksmuseumNavHost(
         composable(
             AppNavigation.Details.route
         ) {
-            DetailsScreen()
+            DetailsScreen(
+                navigateBack = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }

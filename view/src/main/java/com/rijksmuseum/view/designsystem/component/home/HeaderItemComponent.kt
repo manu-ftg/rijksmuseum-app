@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.rijksmuseum.presentation.display.ObjectItemDisplay
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
@@ -44,9 +44,11 @@ fun HeaderItemComponent(
 @Composable
 fun HeaderItemPreview() {
     RijksmuseumTheme {
-        HeaderItemComponent(
-            ObjectItemDisplay.HeaderItem("Vincent Van Gogh")
-        )
+        Surface {
+            HeaderItemComponent(
+                ObjectItemDisplay.HeaderItem("Vincent Van Gogh")
+            )
+        }
     }
 }
 
@@ -54,8 +56,10 @@ fun HeaderItemPreview() {
 @Composable
 fun HeaderItemDarkPreview() {
     RijksmuseumTheme {
-        HeaderItemComponent(
-            ObjectItemDisplay.HeaderItem("Vincent Van Gogh")
-        )
+        Surface {
+            HeaderItemComponent(
+                ObjectItemDisplay.HeaderItem("Vincent Van Gogh")
+            )
+        }
     }
 }

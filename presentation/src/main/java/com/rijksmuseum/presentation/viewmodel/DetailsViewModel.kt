@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
 import com.rijksmuseum.presentation.display.ObjectDisplay
+import com.rijksmuseum.presentation.display.ScreenState
 import com.rijksmuseum.presentation.mapper.toDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ class DetailsViewModel @Inject constructor(
     private val getObjectDetailsUseCase: GetObjectDetailsUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<DetailsState>(DetailsState.Loading)
+    private val _state = MutableStateFlow<ScreenState<ObjectDisplay>>(ScreenState.Loading)
     val state = _state.asStateFlow()
 
     private val id: String by lazy {
@@ -39,24 +40,16 @@ class DetailsViewModel @Inject constructor(
             getObjectDetailsUseCase.execute(objectNumber)
                 .onStart {
                     _state.update {
-                        DetailsState.Loading
+                        ScreenState.Loading
                     }
                 }
                 .map { objectDetails ->
-                    DetailsState.Loaded(objectDetails.toDisplay())
+                    ScreenState.Loaded(objectDetails.toDisplay())
                 }
-                .catch<DetailsState> { throwable ->
-                    emit(DetailsState.Error(throwable.message ?: ""))
+                .catch<ScreenState<ObjectDisplay>> {
+                    emit(ScreenState.Error())
                 }
                 .collect(_state)
         }
     }
-}
-
-sealed class DetailsState {
-    object Loading: DetailsState()
-
-    data class Error(val message: String): DetailsState()
-
-    data class Loaded(val objectDisplay: ObjectDisplay): DetailsState()
 }

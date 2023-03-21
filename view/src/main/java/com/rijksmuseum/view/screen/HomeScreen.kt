@@ -55,8 +55,8 @@ fun HomeContent(
                     is ObjectItemDisplay.ObjectItem -> {
                         ObjectItemComponent(
                             item = item,
-                            onClick =  {
-                                navigateToDetailScreen(item.objectNumber)
+                            onClick =  { objectNumber ->
+                                navigateToDetailScreen(objectNumber)
                             }
                         )
                     }
