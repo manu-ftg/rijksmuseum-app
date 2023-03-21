@@ -7,7 +7,9 @@ import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
 import com.rijksmuseum.presentation.display.ObjectItemDisplay
 import com.rijksmuseum.presentation.mapper.toList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -22,6 +24,9 @@ class HomeViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state.asStateFlow()
+
+    private val _events = MutableSharedFlow<HomeEvent>()
+    val events = _events.asSharedFlow()
 
     private val _objectsMap = MutableStateFlow(mutableMapOf<String, MutableList<ObjectModel>>())
 
@@ -65,9 +70,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onLastItemReached() {
+    fun onLoadingItemReached() {
         if (_state.value.isPaging.not()) {
             loadObjects(showLoader = false)
+        }
+    }
+
+    fun onObjectClicked(objectNumber: String) {
+        viewModelScope.launch {
+            _events.emit(HomeEvent.NavigateToDetail(objectNumber))
         }
     }
 }
@@ -78,3 +89,7 @@ data class HomeState(
     val currentPage: Int = 1,
     val objectsList: List<ObjectItemDisplay> = listOf(),
 )
+
+sealed class HomeEvent {
+    data class NavigateToDetail(val objectNumber: String): HomeEvent()
+}

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rijksmuseum.presentation.display.ObjectItemDisplay
+import com.rijksmuseum.presentation.viewmodel.HomeEvent
 import com.rijksmuseum.presentation.viewmodel.HomeState
 import com.rijksmuseum.presentation.viewmodel.HomeViewModel
 import com.rijksmuseum.view.designsystem.component.LoadingComponent
@@ -27,13 +28,25 @@ fun HomeScreen(
 ) {
     val state: HomeState by viewModel.state.collectAsState()
 
-    HomeContent(state, navigateToDetailScreen) { viewModel.onLastItemReached() }
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is HomeEvent.NavigateToDetail -> navigateToDetailScreen(event.objectNumber)
+            }
+        }
+    }
+
+    HomeContent(
+        state = state,
+        onItemClicked = viewModel::onObjectClicked,
+        onLoadingItemReached = viewModel::onLoadingItemReached
+    )
 }
 
 @Composable
 fun HomeContent(
     state: HomeState,
-    navigateToDetailScreen: (String) -> Unit,
+    onItemClicked: (String) -> Unit,
     onLoadingItemReached: () -> Unit
 ) {
     Box {
@@ -56,7 +69,7 @@ fun HomeContent(
                         ObjectItemComponent(
                             item = item,
                             onClick =  { objectNumber ->
-                                navigateToDetailScreen(objectNumber)
+                                onItemClicked(objectNumber)
                             }
                         )
                     }

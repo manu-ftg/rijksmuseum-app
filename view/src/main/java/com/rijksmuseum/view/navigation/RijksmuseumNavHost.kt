@@ -25,7 +25,14 @@ fun RijksmuseumNavHost(
         ) {
             HomeScreen(
                 navigateToDetailScreen = { objectId ->
-                    navController.navigate(AppNavigation.Details.route.replace("{objectId}", objectId))
+                    navController.navigate(
+                        AppNavigation.Details.route.replace(
+                            "{objectId}",
+                            objectId
+                        )
+                    ) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
