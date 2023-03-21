@@ -75,6 +75,6 @@ class HomeViewModel @Inject constructor(
 data class HomeState(
     val isLoading: Boolean = false,
     val isPaging: Boolean = false,
-    val currentPage: Int = 0,
+    val currentPage: Int = 1,
     val objectsList: List<ObjectItemDisplay> = listOf(),
 )

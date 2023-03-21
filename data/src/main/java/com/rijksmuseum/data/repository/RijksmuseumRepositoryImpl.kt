@@ -2,6 +2,7 @@ package com.rijksmuseum.data.repository
 
 import com.rijksmuseum.data.datasource.remote.RijksmuseumRemoteDatasource
 import com.rijksmuseum.data.mapper.toDomain
+import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,15 @@ class RijksmuseumRepositoryImpl(
             val objectsResponse = remoteDatasource.getObjects(pageNumber = pageNumber)
             emit(
                 objectsResponse.artObjects.mapNotNull { it.toDomain() }
+            )
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun getObjectDetails(objectNumber: String): Flow<ObjectDetailsModel> {
+        return flow {
+            val objectDetailsResponse = remoteDatasource.getObjectDetails(objectNumber = objectNumber)
+            emit(
+                objectDetailsResponse.artObject.toDomain()
             )
         }.flowOn(Dispatchers.IO)
     }

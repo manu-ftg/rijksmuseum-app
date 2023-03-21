@@ -1,6 +1,8 @@
 package com.rijksmuseum.data.mapper
 
+import com.rijksmuseum.data.entity.ArtObjectEntity
 import com.rijksmuseum.data.entity.ObjectEntity
+import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
 
 fun ObjectEntity.toDomain(): ObjectModel? {
@@ -16,4 +18,17 @@ fun ObjectEntity.toDomain(): ObjectModel? {
     } else {
         null
     }
+}
+
+fun ArtObjectEntity.toDomain(): ObjectDetailsModel {
+    return ObjectDetailsModel(
+        id = id,
+        imageUrl = webImage?.url,
+        title = longTitle ?: title,
+        subtitle = subTitle,
+        description = description,
+        artist = principalOrFirstMaker,
+        documentation = documentation ?: listOf(),
+        physicalMedium = physicalMedium
+    )
 }

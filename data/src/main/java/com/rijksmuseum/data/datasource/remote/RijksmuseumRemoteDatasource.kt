@@ -1,7 +1,9 @@
 package com.rijksmuseum.data.datasource.remote
 
-import com.rijksmuseum.data.entity.ObjectsEntity
+import com.rijksmuseum.data.entity.ObjectDetailsResponseEntity
+import com.rijksmuseum.data.entity.ObjectsResponseEntity
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RijksmuseumRemoteDatasource {
@@ -10,5 +12,10 @@ interface RijksmuseumRemoteDatasource {
     suspend fun getObjects(
         @Query("p") pageNumber: Int = 0,
         @Query("ps") pageSize: Int = 10,
-    ): ObjectsEntity
+    ): ObjectsResponseEntity
+
+    @GET("collection/{objectNumber}")
+    suspend fun getObjectDetails(
+        @Path("objectNumber") objectNumber: String
+    ): ObjectDetailsResponseEntity
 }

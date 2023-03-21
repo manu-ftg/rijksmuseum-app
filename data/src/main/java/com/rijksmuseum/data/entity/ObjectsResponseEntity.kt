@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ObjectsEntity(
+data class ObjectsResponseEntity(
     @Json(name = "count")
     val count: Int = 0,
     @Json(name = "countFacets")
@@ -49,22 +49,6 @@ data class ObjectEntity(
     val title: String? = null,
     @Json(name = "webImage")
     val webImage: ObjectImageEntity? = null,
-)
-
-@JsonClass(generateAdapter = true)
-data class ObjectImageEntity(
-    @Json(name = "guid")
-    val guid: String? = null,
-    @Json(name = "height")
-    val height: Int = 0,
-    @Json(name = "offsetPercentageX")
-    val offsetPercentageX: Int = 0,
-    @Json(name = "offsetPercentageY")
-    val offsetPercentageY: Int = 0,
-    @Json(name = "url")
-    val url: String? = null,
-    @Json(name = "width")
-    val width: Int = 0
 )
 
 @JsonClass(generateAdapter = true)

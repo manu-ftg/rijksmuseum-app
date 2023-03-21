@@ -54,10 +54,11 @@ fun HomeContent(
                     }
                     is ObjectItemDisplay.ObjectItem -> {
                         ObjectItemComponent(
-                            item = item
-                        ) { id ->
-                            navigateToDetailScreen(id)
-                        }
+                            item = item,
+                            onClick =  {
+                                navigateToDetailScreen(item.objectNumber)
+                            }
+                        )
                     }
                 }
 

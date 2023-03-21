@@ -23,6 +23,3 @@ val md_theme_dark_background = Color(0xFF001D31)
 val md_theme_dark_onBackground = Color(0xFFCDE5FF)
 val md_theme_dark_surface = Color(0xFF001D31)
 val md_theme_dark_onSurface = Color(0xFFCDE5FF)
-
-
-val seed = Color(0xFFD75140)

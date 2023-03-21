@@ -23,15 +23,17 @@ fun RijksmuseumNavHost(
         composable(
             AppNavigation.Home.route
         ) {
-            HomeScreen { objectId ->
-                navController.navigate(AppNavigation.Details.route.replace("{objectId}", objectId))
-            }
+            HomeScreen(
+                navigateToDetailScreen = { objectId ->
+                    navController.navigate(AppNavigation.Details.route.replace("{objectId}", objectId))
+                }
+            )
         }
 
         composable(
             AppNavigation.Details.route
-        ) { backStackEntry ->
-            DetailsScreen(backStackEntry.arguments?.getString("objectId") ?: "")
+        ) {
+            DetailsScreen()
         }
     }
 }

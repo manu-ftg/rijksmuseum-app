@@ -19,17 +19,24 @@ import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
 fun HeaderItemComponent(
-    item: ObjectItemDisplay.HeaderItem,
-    isSeparatorVisible: Boolean = true
+    item: ObjectItemDisplay.HeaderItem, isSeparatorVisible: Boolean = true
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         if (isSeparatorVisible) {
-            Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(MaterialTheme.colors.secondaryVariant))
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(MaterialTheme.colors.secondaryVariant)
+            )
         }
 
-        Text(text = item.artist, fontSize = 24.sp, modifier = Modifier.padding(24.dp))
+        Text(
+            text = item.artist,
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(24.dp))
     }
 }
 

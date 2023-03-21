@@ -11,5 +11,5 @@ sealed class ObjectItemDisplay(val key: String) {
         val artist: String,
         val objectNumber: String,
         val imageUrl: String? = null
-    ): ObjectItemDisplay(id)
+    ): ObjectItemDisplay(objectNumber)
 }

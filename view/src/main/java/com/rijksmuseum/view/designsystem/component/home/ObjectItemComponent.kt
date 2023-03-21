@@ -31,10 +31,11 @@ import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 @Composable
 fun ObjectItemComponent(
     item: ObjectItemDisplay.ObjectItem,
-    onClick: (String) -> Unit
+    onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         Spacer(modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +47,7 @@ fun ObjectItemComponent(
         Row(
             modifier = Modifier
                 .clickable {
-                    onClick(item.id)
+                    onClick()
                 }
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth(),
@@ -58,14 +59,26 @@ fun ObjectItemComponent(
                 contentScale = ContentScale.Crop,
                 contentDescription = "",
                 placeholder = painterResource(id = R.drawable.ic_placeholder),
-                error = painterResource(id = R.drawable.ic_placeholder),)
+                error = painterResource(id = R.drawable.ic_placeholder),
+            )
 
             Column(modifier = Modifier.weight(1f, true)) {
-                Text(text = item.title, fontSize = 16.sp, modifier = Modifier.padding(horizontal = 16.dp))
-                Text(text = item.artist, fontSize = 12.sp, modifier = Modifier.padding(start = 24.dp, end = 16.dp))
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Text(
+                    text = item.artist,
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(start = 24.dp, end = 16.dp)
+                )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = item.objectNumber, fontSize = 8.sp, modifier = Modifier
-                    .align(Alignment.End))
+                Text(
+                    text = item.objectNumber,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.align(Alignment.End)
+                )
             }
 
             Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Chevron")
