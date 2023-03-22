@@ -6,6 +6,10 @@ buildscript {
         coroutines_version = '1.6.4'
         turbine_version = '0.12.1'
         hilt_version = '2.44.2'
+        app_compat_version = '1.6.1'
+        coil_version = '2.2.2'
+        systemuicontroller_version = '0.28.0'
+        lifecycle_viewmodel_version = '2.5.1'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

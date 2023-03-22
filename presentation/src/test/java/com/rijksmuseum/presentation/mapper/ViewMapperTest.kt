@@ -7,17 +7,17 @@ import org.junit.Test
 
 class ViewMapperTest {
     @Test
-    fun objectMappedToDisplayCorrectly() {
+    fun objectMappedToViewDataCorrectly() {
         val objectModel = getObjectModel()
-        val objectDisplay = getObjectDisplay()
-        assertEquals(objectDisplay, objectModel.toViewData())
+        val objectViewData = getObjectViewData()
+        assertEquals(objectViewData, objectModel.toViewData())
     }
 
     @Test
     fun objectsMapMappedToItemsListCorrectly() {
         val objectsMap = buildObjectItemsList(listOf(), getObjectsList())
-        val objectDisplaysList = getObjectDisplaysList()
-        assertEquals(objectDisplaysList, objectsMap.toList())
+        val objectViewDatasList = getObjectViewDatasList()
+        assertEquals(objectViewDatasList, objectsMap.toList())
     }
 
     private fun getObjectModel() = ObjectModel(
@@ -28,7 +28,7 @@ class ViewMapperTest {
         artist = "artist"
     )
 
-    private fun getObjectDisplay() = ObjectItemViewData.ObjectItem(
+    private fun getObjectViewData() = ObjectItemViewData.ObjectItem(
         id = "id",
         title = "title",
         artist = "artist",
@@ -43,7 +43,7 @@ class ViewMapperTest {
     )
 
 
-    private fun getObjectDisplaysList() = listOf(
+    private fun getObjectViewDatasList() = listOf(
         ObjectItemViewData.HeaderItem("artistA", "id1"),
         ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
         ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
