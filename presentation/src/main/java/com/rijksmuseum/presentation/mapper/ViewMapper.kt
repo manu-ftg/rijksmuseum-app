@@ -7,7 +7,7 @@ import com.rijksmuseum.presentation.display.ObjectItemDisplay
 
 fun Map<String, List<ObjectModel>>.toList(): List<ObjectItemDisplay> {
     return buildList {
-        keys.forEach { artist ->
+        keys.sorted().forEach { artist ->
             add(ObjectItemDisplay.HeaderItem(artist))
             addAll(
                 get(artist)?.map {

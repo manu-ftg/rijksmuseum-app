@@ -1,0 +1,196 @@
+package com.rijksmuseum.presentation.viewmodel
+
+import app.cash.turbine.test
+import com.rijksmuseum.domain.model.ObjectModel
+import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
+import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.mapper.toList
+import com.rijksmuseum.presentation.util.DispatcherProvider
+import com.rijksmuseum.presentation.util.TestDispatcherProvider
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class HomeViewModelTest {
+
+    private lateinit var getObjectsListUseCase: GetObjectsListUseCase
+
+    private lateinit var viewModel: HomeViewModel
+
+    private lateinit var dispatcher: DispatcherProvider
+
+    @Before
+    fun setUp() {
+        dispatcher = TestDispatcherProvider()
+
+        getObjectsListUseCase = mockk()
+    }
+
+    @Test
+    fun whenStartViewModelAndObjectListIsLoaded() = runTest {
+        // Given
+        val flow = flow {
+            emit(getObjectsList())
+        }
+        coEvery {
+            getObjectsListUseCase.execute(any())
+        } returns flow
+        val objectsDisplayList = getObjectsDisplayList()
+
+        // When
+        viewModel = HomeViewModel(
+            getObjectsListUseCase,
+            dispatcher
+        )
+
+        // Then
+        viewModel.state.test {
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenStartViewModelAndErrorIsReceived() = runTest {
+        // Given
+        val flow = flow<List<ObjectModel>> {
+            throw Throwable()
+        }
+        coEvery {
+            getObjectsListUseCase.execute(any())
+        } returns flow
+
+        // When
+        viewModel = HomeViewModel(
+            getObjectsListUseCase,
+            dispatcher
+        )
+
+        // Then
+        viewModel.state.test {
+            assertEquals(ScreenState.Error(), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenMoreItemsAreLoaded() = runTest {
+        // Given
+        val flow = flow {
+            emit(getObjectsList())
+        }
+        coEvery {
+            getObjectsListUseCase.execute(any())
+        } returns flow
+        val objectsDisplayList = getObjectsDisplayList()
+
+        // When
+        viewModel = HomeViewModel(
+            getObjectsListUseCase,
+            dispatcher
+        )
+        launch {
+            viewModel.onLoadingItemReached()
+        }
+
+        // Then
+        viewModel.state.test {
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenItemIsClickedNavigateToDetailScreen() = runTest {
+        // Given
+        val flow = flow {
+            emit(getObjectsList())
+        }
+        coEvery {
+            getObjectsListUseCase.execute(any())
+        } returns flow
+
+        // When
+        viewModel = HomeViewModel(
+            getObjectsListUseCase,
+            dispatcher
+        )
+        launch {
+            viewModel.onObjectClicked("itemId")
+        }
+
+        // Then
+        viewModel.events.test {
+            assertEquals(HomeEvent.NavigateToDetail("itemId"), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenLoadMoreItemsFailsShowErrorDialog() = runTest {
+        // Given
+        val flow = flow {
+            emit(getObjectsList())
+        }
+        val errorFlow = flow<List<ObjectModel>> {
+            throw Throwable()
+        }
+        coEvery {
+            getObjectsListUseCase.execute(1)
+        } returns flow
+        coEvery {
+            getObjectsListUseCase.execute(2)
+        } returns errorFlow
+        val objectsDisplayList = getObjectsDisplayList()
+
+        // When
+        viewModel = HomeViewModel(
+            getObjectsListUseCase,
+            dispatcher
+        )
+        launch {
+            viewModel.onLoadingItemReached()
+        }
+
+        // Then
+        viewModel.state.test {
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(showError = true, objectsList = objectsDisplayList)), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    private fun getObjectsList() = listOf(
+        ObjectModel("id1", "url", "long", "number1", "title", "artistA"),
+        ObjectModel("id2", "url", "long", "number2", "title", "artistA"),
+        ObjectModel("id3", "url", "long", "number3", "title", "artistB")
+    )
+
+    private fun getObjectsDisplayList() = mapOf(
+        "artistA" to listOf(
+            ObjectModel("id1", "url", "long", "number1", "title", "artistA"),
+            ObjectModel("id2", "url", "long", "number2", "title", "artistA")
+        ),
+        "artistB" to listOf(
+            ObjectModel("id3", "url", "long", "number3", "title", "artistB")
+        )
+    ).toList()
+}

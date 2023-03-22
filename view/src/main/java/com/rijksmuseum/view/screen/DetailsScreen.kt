@@ -14,6 +14,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.rijksmuseum.presentation.display.ObjectDisplay
 import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewmodel.DetailsEvent
 import com.rijksmuseum.presentation.viewmodel.DetailsViewModel
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.component.dialog.DialogComponent
@@ -40,21 +42,32 @@ fun DetailsScreen(
 ) {
     val state: ScreenState<ObjectDisplay> by viewModel.state.collectAsState()
 
-    DetailsContent(state = state, navigateBack = navigateBack)
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is DetailsEvent.NavigateBack -> navigateBack()
+            }
+        }
+    }
+
+    DetailsContent(
+        state = state,
+        onDialogClicked = viewModel::onDialogClicked
+    )
 }
 
 @Composable
 fun DetailsContent(
     state: ScreenState<ObjectDisplay>,
-    navigateBack: () -> Unit = {}
+    onDialogClicked: () -> Unit = {}
 ) {
     when (state) {
         is ScreenState.Error -> {
             DialogComponent(
                 title = "Error",
                 subtitle = state.message ?: "There was a problem loading the information",
-                buttonText = "Ok",
-                onClick = navigateBack
+                firstButtonText = "Ok",
+                onClickFirst = onDialogClicked
             )
         }
         is ScreenState.Loaded -> ObjectDetailsContent(state.content)

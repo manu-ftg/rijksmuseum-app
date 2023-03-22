@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import com.rijksmuseum.BuildConfig
 import com.rijksmuseum.data.di.ApiKey
 import com.rijksmuseum.data.di.BaseUrl
+import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
+import com.rijksmuseum.presentation.util.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +40,11 @@ object AppModule {
         @ApplicationContext context: Context
     ): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDispatcherProvider(): DispatcherProvider {
+        return DefaultDispatcherProvider()
     }
 }

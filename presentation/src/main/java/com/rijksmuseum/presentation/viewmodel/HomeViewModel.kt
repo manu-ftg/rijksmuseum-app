@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
 import com.rijksmuseum.presentation.display.ObjectItemDisplay
+import com.rijksmuseum.presentation.display.ScreenState
 import com.rijksmuseum.presentation.mapper.toList
+import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
+import com.rijksmuseum.presentation.util.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
@@ -19,37 +23,52 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getObjectsListUseCase: GetObjectsListUseCase
+    private val getObjectsListUseCase: GetObjectsListUseCase,
+    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeState())
+    companion object {
+        private const val INITIAL_PAGE = 1
+    }
+
+    private val _state = MutableStateFlow<ScreenState<HomeState>>(ScreenState.Loading)
     val state = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<HomeEvent>()
     val events = _events.asSharedFlow()
 
     private val _objectsMap = MutableStateFlow(mutableMapOf<String, MutableList<ObjectModel>>())
+    private val _currentPage = MutableStateFlow(INITIAL_PAGE)
 
     init {
         initialize()
     }
 
     private fun initialize() {
-        _state.update { HomeState() }
-        loadObjects(showLoader = true)
+        _state.update { ScreenState.Loading }
+        _currentPage.update { INITIAL_PAGE }
+        _objectsMap.update { mutableMapOf() }
+        loadObjects()
     }
 
-    private fun loadObjects(showLoader: Boolean = false) {
-        viewModelScope.launch {
-            getObjectsListUseCase.execute(_state.value.currentPage)
+    private fun loadObjects() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            getObjectsListUseCase.execute(_currentPage.value)
                 .onStart {
-                    if (showLoader) {
-                        _state.update {
-                            _state.value.copy(isLoading = true)
-                        }
-                    }
                     _state.update {
-                        _state.value.copy(isPaging = true)
+                        when (val currentState = _state.value) {
+                            is ScreenState.Loaded -> {
+                                ScreenState.Loaded(
+                                    currentState.content.copy(
+                                        isPaging = true,
+                                        showError = false
+                                    )
+                                )
+                            }
+                            else -> {
+                                ScreenState.Loading
+                            }
+                        }
                     }
                 }
                 .map { objects ->
@@ -60,34 +79,67 @@ class HomeViewModel @Inject constructor(
                             _objectsMap.value[objectItem.artist] = mutableListOf(objectItem)
                         }
                     }
-                    _state.value.copy(
-                        isLoading = false,
-                        isPaging = false,
-                        currentPage = _state.value.currentPage + 1,
-                        objectsList = _objectsMap.value.toList()
+                    _currentPage.update {
+                        _currentPage.value + 1
+                    }
+                    ScreenState.Loaded(
+                        HomeState(objectsList = _objectsMap.value.toList())
+                    )
+                }.catch<ScreenState<HomeState>> {
+                    emit(
+                        when (val currentState = _state.value) {
+                            is ScreenState.Loaded -> {
+                                ScreenState.Loaded(
+                                    currentState.content.copy(
+                                        isPaging = false,
+                                        showError = true
+                                    )
+                                )
+                            }
+                            else -> {
+                                ScreenState.Error()
+                            }
+                        }
                     )
                 }.collect(_state)
         }
     }
 
     fun onLoadingItemReached() {
-        if (_state.value.isPaging.not()) {
-            loadObjects(showLoader = false)
+        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isPaging == false) {
+            loadObjects()
         }
     }
 
     fun onObjectClicked(objectNumber: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.main) {
             _events.emit(HomeEvent.NavigateToDetail(objectNumber))
+        }
+    }
+
+    fun onRetryClicked() {
+        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isPaging == false || _state.value !is ScreenState.Loading) {
+            loadObjects()
+        }
+    }
+
+    fun onDialogDismissed() {
+        (_state.value as? ScreenState.Loaded)?.content?.let { homeState ->
+            _state.update {
+                ScreenState.Loaded(
+                    homeState.copy(
+                        showError = false
+                    )
+                )
+            }
         }
     }
 }
 
 data class HomeState(
-    val isLoading: Boolean = false,
     val isPaging: Boolean = false,
-    val currentPage: Int = 1,
     val objectsList: List<ObjectItemDisplay> = listOf(),
+    val showError: Boolean = false
 )
 
 sealed class HomeEvent {
