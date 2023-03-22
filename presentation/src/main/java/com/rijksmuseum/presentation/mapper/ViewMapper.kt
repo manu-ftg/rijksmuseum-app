@@ -2,26 +2,26 @@ package com.rijksmuseum.presentation.mapper
 
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
-import com.rijksmuseum.presentation.display.ObjectDisplay
-import com.rijksmuseum.presentation.display.ObjectItemDisplay
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 
-fun Map<String, List<ObjectModel>>.toList(): List<ObjectItemDisplay> {
+fun Map<String, List<ObjectModel>>.toList(): List<ObjectItemViewData> {
     return buildList {
         keys.sorted().forEach { artist ->
-            add(ObjectItemDisplay.HeaderItem(artist))
+            add(ObjectItemViewData.HeaderItem(artist))
             addAll(
                 get(artist)?.map {
                         objectModel ->
-                    objectModel.toDisplay()
+                    objectModel.toViewData()
                 } ?: listOf()
             )
         }
-        add(ObjectItemDisplay.LoaderItem)
+        add(ObjectItemViewData.LoaderItem)
     }.distinctBy { it.key }
 }
 
-fun ObjectModel.toDisplay(): ObjectItemDisplay.ObjectItem {
-    return ObjectItemDisplay.ObjectItem(
+fun ObjectModel.toViewData(): ObjectItemViewData.ObjectItem {
+    return ObjectItemViewData.ObjectItem(
         id = id,
         title = title,
         artist = artist,
@@ -30,8 +30,8 @@ fun ObjectModel.toDisplay(): ObjectItemDisplay.ObjectItem {
     )
 }
 
-fun ObjectDetailsModel.toDisplay(): ObjectDisplay {
-    return ObjectDisplay(
+fun ObjectDetailsModel.toViewData(): ObjectViewData {
+    return ObjectViewData(
         id = id,
         imageUrl = imageUrl,
         title = title,

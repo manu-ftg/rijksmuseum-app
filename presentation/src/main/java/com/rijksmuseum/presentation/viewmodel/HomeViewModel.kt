@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
-import com.rijksmuseum.presentation.display.ObjectItemDisplay
-import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.mapper.toList
 import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
 import com.rijksmuseum.presentation.util.DispatcherProvider
@@ -138,7 +138,7 @@ class HomeViewModel @Inject constructor(
 
 data class HomeState(
     val isPaging: Boolean = false,
-    val objectsList: List<ObjectItemDisplay> = listOf(),
+    val objectsList: List<ObjectItemViewData> = listOf(),
     val showError: Boolean = false
 )
 

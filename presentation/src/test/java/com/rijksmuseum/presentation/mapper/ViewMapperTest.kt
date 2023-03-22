@@ -1,7 +1,7 @@
 package com.rijksmuseum.presentation.mapper
 
 import com.rijksmuseum.domain.model.ObjectModel
-import com.rijksmuseum.presentation.display.ObjectItemDisplay
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -10,7 +10,7 @@ class ViewMapperTest {
     fun objectMappedToDisplayCorrectly() {
         val objectModel = getObjectModel()
         val objectDisplay = getObjectDisplay()
-        assertEquals(objectDisplay, objectModel.toDisplay())
+        assertEquals(objectDisplay, objectModel.toViewData())
     }
 
     @Test
@@ -29,7 +29,7 @@ class ViewMapperTest {
         artist = "artist"
     )
 
-    private fun getObjectDisplay() = ObjectItemDisplay.ObjectItem(
+    private fun getObjectDisplay() = ObjectItemViewData.ObjectItem(
         id = "id",
         title = "title",
         artist = "artist",
@@ -48,11 +48,11 @@ class ViewMapperTest {
     )
 
     private fun getObjectDisplaysList() = listOf(
-        ObjectItemDisplay.HeaderItem("artistA"),
-        ObjectItemDisplay.ObjectItem("id1", "title", "artistA", "number1", "url"),
-        ObjectItemDisplay.ObjectItem("id2", "title", "artistA", "number2", "url"),
-        ObjectItemDisplay.HeaderItem("artistB"),
-        ObjectItemDisplay.ObjectItem("id3", "title", "artistB", "number3", "url"),
-        ObjectItemDisplay.LoaderItem
+        ObjectItemViewData.HeaderItem("artistA"),
+        ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
+        ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
+        ObjectItemViewData.HeaderItem("artistB"),
+        ObjectItemViewData.ObjectItem("id3", "title", "artistB", "number3", "url"),
+        ObjectItemViewData.LoaderItem
     )
 }

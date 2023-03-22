@@ -11,8 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.rijksmuseum.presentation.display.ObjectItemDisplay
-import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.viewmodel.HomeEvent
 import com.rijksmuseum.presentation.viewmodel.HomeState
 import com.rijksmuseum.presentation.viewmodel.HomeViewModel
@@ -88,16 +88,16 @@ fun HomeLoadedContent(
                 key = { _, item -> item.key }
             ) { index, item ->
                 when (item) {
-                    is ObjectItemDisplay.HeaderItem -> {
+                    is ObjectItemViewData.HeaderItem -> {
                         HeaderItemComponent(
                             item = item,
                             isSeparatorVisible = index != 0
                         )
                     }
-                    ObjectItemDisplay.LoaderItem -> {
+                    ObjectItemViewData.LoaderItem -> {
                         LoaderItemComponent()
                     }
-                    is ObjectItemDisplay.ObjectItem -> {
+                    is ObjectItemViewData.ObjectItem -> {
                         ObjectItemComponent(
                             item = item,
                             onClick =  { objectNumber ->
@@ -133,15 +133,15 @@ fun HomePreview() {
         HomeContent(
             state = ScreenState.Loaded(
                 HomeState(
-                    objectsList = listOf<ObjectItemDisplay>(
-                        ObjectItemDisplay.HeaderItem("Artist"),
-                        ObjectItemDisplay.ObjectItem("id1", "Title", "Artist", "abc"),
-                        ObjectItemDisplay.HeaderItem("Artist 2"),
-                        ObjectItemDisplay.ObjectItem("id2", "Title", "Artist 2", "abc1"),
-                        ObjectItemDisplay.ObjectItem("id3", "Title", "Artist 2", "abc2"),
-                        ObjectItemDisplay.ObjectItem("id4", "Title", "Artist 2", "abc3"),
-                        ObjectItemDisplay.ObjectItem("id5", "Title", "Artist 2", "abc4"),
-                        ObjectItemDisplay.LoaderItem
+                    objectsList = listOf<ObjectItemViewData>(
+                        ObjectItemViewData.HeaderItem("Artist"),
+                        ObjectItemViewData.ObjectItem("id1", "Title", "Artist", "abc"),
+                        ObjectItemViewData.HeaderItem("Artist 2"),
+                        ObjectItemViewData.ObjectItem("id2", "Title", "Artist 2", "abc1"),
+                        ObjectItemViewData.ObjectItem("id3", "Title", "Artist 2", "abc2"),
+                        ObjectItemViewData.ObjectItem("id4", "Title", "Artist 2", "abc3"),
+                        ObjectItemViewData.ObjectItem("id5", "Title", "Artist 2", "abc4"),
+                        ObjectItemViewData.LoaderItem
                     )
                 )
             ),

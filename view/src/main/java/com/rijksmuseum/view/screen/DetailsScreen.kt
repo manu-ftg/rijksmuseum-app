@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.rijksmuseum.presentation.display.ObjectDisplay
-import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.viewmodel.DetailsEvent
 import com.rijksmuseum.presentation.viewmodel.DetailsViewModel
 import com.rijksmuseum.view.R
@@ -40,7 +40,7 @@ fun DetailsScreen(
     viewModel: DetailsViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
-    val state: ScreenState<ObjectDisplay> by viewModel.state.collectAsState()
+    val state: ScreenState<ObjectViewData> by viewModel.state.collectAsState()
 
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->
@@ -58,7 +58,7 @@ fun DetailsScreen(
 
 @Composable
 fun DetailsContent(
-    state: ScreenState<ObjectDisplay>,
+    state: ScreenState<ObjectViewData>,
     onDialogClicked: () -> Unit = {}
 ) {
     when (state) {
@@ -85,7 +85,7 @@ fun DetailsContent(
 
 @Composable
 fun ObjectDetailsContent(
-    details: ObjectDisplay
+    details: ObjectViewData
 ) {
     Column(
         modifier = Modifier
@@ -143,7 +143,7 @@ fun ObjectDetailsContent(
     showBackground = true,
     device = Devices.PIXEL_4)
 @Composable
-fun DetailsScreenPreview() {
+fun DetailsScreenErrorPreview() {
     RijksmuseumTheme {
         DetailsContent(ScreenState.Error())
     }

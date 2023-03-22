@@ -1,4 +1,4 @@
-package com.rijksmuseum.presentation.display
+package com.rijksmuseum.presentation.viewdata
 
 sealed class ScreenState<out T> {
     object Loading: ScreenState<Nothing>()

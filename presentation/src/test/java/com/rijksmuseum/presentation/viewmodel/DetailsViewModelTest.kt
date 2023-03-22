@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
-import com.rijksmuseum.presentation.display.ObjectDisplay
-import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
 import io.mockk.coEvery
@@ -63,7 +63,7 @@ class DetailsViewModelTest {
 
         // Then
         viewModel.state.test {
-            assertEquals(ScreenState.Loaded(content = getObjectDisplay()), awaitItem())
+            assertEquals(ScreenState.Loaded(content = getObjectViewData()), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -143,7 +143,7 @@ class DetailsViewModelTest {
         physicalMedium = "medium"
     )
 
-    private fun getObjectDisplay() = ObjectDisplay(
+    private fun getObjectViewData() = ObjectViewData(
         id = "id",
         imageUrl = "url",
         title = "title",

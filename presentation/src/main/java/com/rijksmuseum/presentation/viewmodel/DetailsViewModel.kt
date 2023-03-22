@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
-import com.rijksmuseum.presentation.display.ObjectDisplay
-import com.rijksmuseum.presentation.display.ScreenState
-import com.rijksmuseum.presentation.mapper.toDisplay
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
+import com.rijksmuseum.presentation.mapper.toViewData
 import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ class DetailsViewModel @Inject constructor(
     private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<ScreenState<ObjectDisplay>>(ScreenState.Loading)
+    private val _state = MutableStateFlow<ScreenState<ObjectViewData>>(ScreenState.Loading)
     val state = _state.asStateFlow()
 
     private val _events = MutableSharedFlow<DetailsEvent>()
@@ -52,9 +52,9 @@ class DetailsViewModel @Inject constructor(
                     }
                 }
                 .map { objectDetails ->
-                    ScreenState.Loaded(objectDetails.toDisplay())
+                    ScreenState.Loaded(objectDetails.toViewData())
                 }
-                .catch<ScreenState<ObjectDisplay>> {
+                .catch<ScreenState<ObjectViewData>> {
                     emit(ScreenState.Error())
                 }
                 .collect(_state)

@@ -1,6 +1,6 @@
-package com.rijksmuseum.presentation.display
+package com.rijksmuseum.presentation.viewdata
 
-data class ObjectDisplay(
+data class ObjectViewData(
     val id: String,
     val imageUrl: String?,
     val title: String,

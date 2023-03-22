@@ -3,7 +3,7 @@ package com.rijksmuseum.presentation.viewmodel
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
-import com.rijksmuseum.presentation.display.ScreenState
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.mapper.toList
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
@@ -13,11 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -48,7 +45,7 @@ class HomeViewModelTest {
         coEvery {
             getObjectsListUseCase.execute(any())
         } returns flow
-        val objectsDisplayList = getObjectsDisplayList()
+        val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
@@ -58,7 +55,7 @@ class HomeViewModelTest {
 
         // Then
         viewModel.state.test {
-            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -95,7 +92,7 @@ class HomeViewModelTest {
         coEvery {
             getObjectsListUseCase.execute(any())
         } returns flow
-        val objectsDisplayList = getObjectsDisplayList()
+        val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
@@ -108,7 +105,7 @@ class HomeViewModelTest {
 
         // Then
         viewModel.state.test {
-            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -154,7 +151,7 @@ class HomeViewModelTest {
         coEvery {
             getObjectsListUseCase.execute(2)
         } returns errorFlow
-        val objectsDisplayList = getObjectsDisplayList()
+        val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
@@ -167,8 +164,8 @@ class HomeViewModelTest {
 
         // Then
         viewModel.state.test {
-            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsDisplayList)), awaitItem())
-            assertEquals(ScreenState.Loaded(content = HomeState(showError = true, objectsList = objectsDisplayList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(showError = true, objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -184,7 +181,7 @@ class HomeViewModelTest {
         ObjectModel("id3", "url", "long", "number3", "title", "artistB")
     )
 
-    private fun getObjectsDisplayList() = mapOf(
+    private fun getObjectsViewDataList() = mapOf(
         "artistA" to listOf(
             ObjectModel("id1", "url", "long", "number1", "title", "artistA"),
             ObjectModel("id2", "url", "long", "number2", "title", "artistA")

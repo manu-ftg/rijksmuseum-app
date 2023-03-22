@@ -19,18 +19,19 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.rijksmuseum.presentation.display.ObjectItemDisplay
+import coil.compose.SubcomposeAsyncImage
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
 fun ObjectItemComponent(
-    item: ObjectItemDisplay.ObjectItem,
+    item: ObjectItemViewData.ObjectItem,
     onClick: (String) -> Unit
 ) {
     Column(
@@ -92,7 +93,7 @@ fun ObjectItemPreview() {
     RijksmuseumTheme {
         Surface {
             ObjectItemComponent(
-                item = ObjectItemDisplay.ObjectItem(
+                item = ObjectItemViewData.ObjectItem(
                     "Id",
                     "This is the title",
                     "This is the artist",
@@ -110,7 +111,7 @@ fun ObjectItemDarkPreview() {
     RijksmuseumTheme {
         Surface {
             ObjectItemComponent(
-                item = ObjectItemDisplay.ObjectItem(
+                item = ObjectItemViewData.ObjectItem(
                     "Id",
                     "This is the title",
                     "This is the artist",
