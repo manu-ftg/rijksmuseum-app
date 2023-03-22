@@ -2,7 +2,6 @@ package com.rijksmuseum.domain.usecase
 
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectDetailsModel
-import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
 import io.mockk.coEvery
 import io.mockk.coVerify

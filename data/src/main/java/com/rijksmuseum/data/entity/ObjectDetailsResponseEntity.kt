@@ -1,7 +1,7 @@
 package com.rijksmuseum.data.entity
-import com.squareup.moshi.JsonClass
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 
 @JsonClass(generateAdapter = true)

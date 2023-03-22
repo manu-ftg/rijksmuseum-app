@@ -1,11 +1,8 @@
 package com.rijksmuseum.view.designsystem.component.home
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -16,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.view.SeparatorComponent
 
 @Composable
 fun HeaderItemComponent(
@@ -25,12 +23,7 @@ fun HeaderItemComponent(
         modifier = Modifier.fillMaxWidth()
     ) {
         if (isSeparatorVisible) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colors.secondaryVariant)
-            )
+            SeparatorComponent()
         }
 
         Text(

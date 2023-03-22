@@ -25,12 +25,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.view.SeparatorComponent
 
 @Composable
 fun ObjectItemComponent(
@@ -41,11 +44,8 @@ fun ObjectItemComponent(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
+        SeparatorComponent(modifier = Modifier
             .padding(horizontal = 16.dp)
-            .height(1.dp)
-            .background(MaterialTheme.colors.secondaryVariant)
         )
 
         Row(
@@ -83,11 +83,15 @@ fun ObjectItemComponent(
                 Text(
                     text = item.title,
                     style = MaterialTheme.typography.h6,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 Text(
-                    text = item.artist,
-                    style = MaterialTheme.typography.body1,
+                    text = stringResource(R.string.author_title, item.artist),
+                    style = MaterialTheme.typography.subtitle1,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(start = 24.dp, end = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))

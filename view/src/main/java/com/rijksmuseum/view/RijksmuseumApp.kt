@@ -5,18 +5,20 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.rijksmuseum.view.designsystem.view.topbar.TopBarComponent
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
+import com.rijksmuseum.view.navigation.isBackButtonVisible
 
 @Composable
 fun RijksmuseumApp(
     navController: NavHostController = rememberNavController(),
 ) {
-    val barColor = MaterialTheme.colors.primary
+    val barColor = MaterialTheme.colors.primaryVariant
     val systemUiController = rememberSystemUiController()
     LaunchedEffect(systemUiController, barColor) {
         systemUiController.setStatusBarColor(
@@ -24,9 +26,19 @@ fun RijksmuseumApp(
         )
     }
 
+    val currentRoute = navController
+        .currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
+        .value
+
     Scaffold(
         topBar = {
-            TopBarComponent(navController)
+            TopBarComponent(
+                isBackButtonVisible = currentRoute.isBackButtonVisible(),
+                onBackButtonClicked = {
+                    navController.navigateUp()
+                }
+            )
         }
     ) { paddingValues ->
         RijksmuseumNavHost(

@@ -2,8 +2,8 @@ package com.rijksmuseum.presentation.mapper
 
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
-import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
 
 fun buildObjectItemsList(oldList: List<ObjectItemViewData>, newItems: List<ObjectModel>): List<ObjectItemViewData> {
     val filteredList = oldList.filter { it !is ObjectItemViewData.LoaderItem }

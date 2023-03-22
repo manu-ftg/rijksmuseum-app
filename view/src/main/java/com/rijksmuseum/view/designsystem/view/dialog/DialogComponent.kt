@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.rijksmuseum.view.designsystem.view.button.PrimaryButtonComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.view.button.PrimaryButtonComponent
 
 @Composable
 fun DialogComponent(

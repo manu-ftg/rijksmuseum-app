@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
-import com.rijksmuseum.presentation.viewdata.ObjectViewData
-import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.mapper.toViewData
 import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
 import com.rijksmuseum.presentation.util.DispatcherProvider
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

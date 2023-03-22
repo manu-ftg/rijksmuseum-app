@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
-import com.rijksmuseum.presentation.viewdata.ObjectViewData
-import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
+import com.rijksmuseum.presentation.viewdata.ObjectViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

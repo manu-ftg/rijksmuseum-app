@@ -2,6 +2,7 @@ package com.rijksmuseum.view.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,4 +53,8 @@ fun RijksmuseumNavHost(
 sealed class AppNavigation(val route: String) {
     object Home : AppNavigation(route = "home_screen")
     object Details : AppNavigation(route = "detail_screen/{objectId}")
+}
+
+fun NavBackStackEntry?.isBackButtonVisible(): Boolean {
+    return this?.destination?.route != null && this.destination.route != AppNavigation.Home.route
 }

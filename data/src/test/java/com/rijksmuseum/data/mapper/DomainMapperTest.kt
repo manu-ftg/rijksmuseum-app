@@ -1,8 +1,7 @@
-package com.rijksmuseum.data
+package com.rijksmuseum.data.mapper
 
 import com.rijksmuseum.data.entity.ArtObjectEntity
 import com.rijksmuseum.data.entity.ObjectEntity
-import com.rijksmuseum.data.mapper.toDomain
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
 import org.junit.Assert

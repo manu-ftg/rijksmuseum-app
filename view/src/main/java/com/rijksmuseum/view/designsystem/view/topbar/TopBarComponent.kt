@@ -10,7 +10,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -19,24 +18,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
-import com.rijksmuseum.view.navigation.AppNavigation
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
 
 @Composable
 fun TopBarComponent(
-    navController: NavHostController
+    modifier: Modifier = Modifier,
+    isBackButtonVisible: Boolean = false,
+    onBackButtonClicked: () -> Unit = {}
 ) {
-    val currentRoute = navController
-        .currentBackStackEntryFlow
-        .collectAsState(initial = navController.currentBackStackEntry)
 
     TopAppBar(
+        modifier = modifier,
         title = {
             Text(text = stringResource(id = R.string.top_bar_title))
         },
         navigationIcon = {
-            if (currentRoute.value?.destination?.route != AppNavigation.Home.route) {
-                IconButton(onClick = { navController.navigateUp() }) {
+            if (isBackButtonVisible) {
+                IconButton(onClick = onBackButtonClicked) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Navigate back")
                 }
             }
@@ -53,7 +51,7 @@ fun TopBarPreview() {
 
     RijksmuseumTheme {
         Scaffold(modifier = Modifier.fillMaxSize(),
-            topBar = { TopBarComponent(navController) }) { paddingValues ->
+            topBar = { TopBarComponent(isBackButtonVisible = true) }) { paddingValues ->
             RijksmuseumNavHost(
                 modifier = Modifier.padding(paddingValues),
                 navController = navController

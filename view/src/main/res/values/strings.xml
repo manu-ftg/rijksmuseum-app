@@ -6,4 +6,6 @@
     <string name="common_error_title">Error</string>
     <string name="pagination_error_message">There was a problem loading more results</string>
     <string name="common_ok_text">Ok</string>
+    <string name="author_title">Author: %s</string>
+    <string name="physical_medium_title">Physical medium: %s</string>
 </resources>

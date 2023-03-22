@@ -120,39 +120,49 @@ fun ObjectDetailsContent(
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxWidth()
+        ) {
+            Text(
+                text = details.title,
+                style = MaterialTheme.typography.h6
+            )
 
-        Text(
-            text = details.title,
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = details.artist,
-            style = MaterialTheme.typography.subtitle1,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-        )
-
-        details.physicalMedium?.let { _physicalMedium ->
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = _physicalMedium,
-                style = MaterialTheme.typography.caption,
-                modifier = Modifier.padding(start = 24.dp, end = 24.dp)
+                text = stringResource(R.string.author_title, details.artist),
+                style = MaterialTheme.typography.subtitle1
             )
+
+            details.physicalMedium?.let { _physicalMedium ->
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = stringResource(R.string.physical_medium_title, _physicalMedium),
+                    style = MaterialTheme.typography.subtitle2
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            details.description?.let { _description ->
+                Text(
+                    text = _description,
+                    style = MaterialTheme.typography.body1
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            details.documentation.forEach { documentation ->
+                Text(
+                    text = documentation,
+                    style = MaterialTheme.typography.caption,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = details.description ?: "",
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier.padding(16.dp)
-        )
     }
 }
 
@@ -163,5 +173,24 @@ fun ObjectDetailsContent(
 fun DetailsScreenErrorPreview() {
     RijksmuseumTheme {
         DetailsContent(ScreenState.Error())
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4)
+@Composable
+fun DetailsLoadedPreview() {
+    RijksmuseumTheme {
+        DetailsContent(ScreenState.Loaded(ObjectViewData(
+            "id",
+            "imageUrl",
+            "This is the title",
+        "subtitle",
+        "artist",
+        "This is a not really long description",
+        listOf("documentation1", "documentation2"),
+        "physicalMedium"
+        )))
     }
 }

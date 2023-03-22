@@ -3,10 +3,10 @@ package com.rijksmuseum.presentation.viewmodel
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
-import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
