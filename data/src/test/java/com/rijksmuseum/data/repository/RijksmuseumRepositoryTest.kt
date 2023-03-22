@@ -1,6 +1,7 @@
 package com.rijksmuseum.data.repository
 
 import app.cash.turbine.test
+import com.rijksmuseum.data.datasource.local.RijksmuseumLocalDatasource
 import com.rijksmuseum.data.datasource.remote.RijksmuseumRemoteDatasource
 import com.rijksmuseum.data.entity.ArtObjectEntity
 import com.rijksmuseum.data.entity.ObjectDetailsResponseEntity
@@ -22,11 +23,14 @@ class RijksmuseumRepositoryTest {
 
     private lateinit var repository: RijksmuseumRepository
 
-    private lateinit var datasource: RijksmuseumRemoteDatasource
+    private lateinit var remoteDatasource: RijksmuseumRemoteDatasource
+
+    private lateinit var localDatasource: RijksmuseumLocalDatasource
 
     @Before
     fun setUp() {
-        datasource = mockk()
+        remoteDatasource = mockk()
+        localDatasource = mockk()
     }
 
     @Test
@@ -35,12 +39,12 @@ class RijksmuseumRepositoryTest {
         val objectDetailsEntity = getObjectDetailsEntity()
         val objectDetailsModel = objectDetailsEntity.toDomain()
         coEvery {
-            datasource.getObjectDetails(any())
+            remoteDatasource.getObjectDetails(any())
         } returns ObjectDetailsResponseEntity(artObject = objectDetailsEntity, elapsedMilliseconds = 1)
         val id = "id"
 
         // When
-        repository = RijksmuseumRepositoryImpl(datasource)
+        repository = RijksmuseumRepositoryImpl(remoteDatasource, localDatasource)
 
         // Then
         repository.getObjectDetails(id).test {
@@ -55,12 +59,12 @@ class RijksmuseumRepositoryTest {
         val objectEntityList = getObjectList()
         val objectModelList = objectEntityList.mapNotNull { it.toDomain() }
         coEvery {
-            datasource.getObjects(any())
+            remoteDatasource.getObjects(any())
         } returns ObjectsResponseEntity(artObjects = getObjectList())
         val page = 1
 
         // When
-        repository = RijksmuseumRepositoryImpl(datasource)
+        repository = RijksmuseumRepositoryImpl(remoteDatasource, localDatasource)
 
         // Then
         repository.getObjects(page).test {

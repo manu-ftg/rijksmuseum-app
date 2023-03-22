@@ -1,5 +1,6 @@
 package com.rijksmuseum.data.di
 
+import com.rijksmuseum.data.datasource.local.RijksmuseumLocalDatasource
 import com.rijksmuseum.data.datasource.remote.RijksmuseumRemoteDatasource
 import com.rijksmuseum.data.repository.RijksmuseumRepositoryImpl
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
@@ -17,9 +18,11 @@ object RepositoryModule {
     @Provides
     fun provideRijksmuseumRepository(
         remoteDataSource: RijksmuseumRemoteDatasource,
+        localDatasource: RijksmuseumLocalDatasource
     ): RijksmuseumRepository {
         return RijksmuseumRepositoryImpl(
-            remoteDatasource = remoteDataSource
+            remoteDatasource = remoteDataSource,
+            localDatasource = localDatasource
         )
     }
 }

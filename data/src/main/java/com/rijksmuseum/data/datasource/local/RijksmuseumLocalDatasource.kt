@@ -1,7 +1,7 @@
 package com.rijksmuseum.data.datasource.local
 
 import android.content.SharedPreferences
-import com.rijksmuseum.data.entity.CultureEntity
+import com.rijksmuseum.domain.model.CultureModel
 import javax.inject.Inject
 
 class RijksmuseumLocalDatasource @Inject constructor(
@@ -9,12 +9,14 @@ class RijksmuseumLocalDatasource @Inject constructor(
 ) {
 
     companion object {
-        private val DEFAULT_CULTURE: String = CultureEntity.EN.value
+        private val DEFAULT_CULTURE: String = CultureModel.EN.value
     }
 
     fun getCulture(): String = sharedPreferences.getString("", DEFAULT_CULTURE) ?: DEFAULT_CULTURE
 
-    fun updateCulture(culture: CultureEntity) {
+    fun updateCulture(culture: CultureModel): Boolean {
+        val cultureHasChanged = getCulture() != culture.value
         sharedPreferences.edit().putString("", culture.value).apply()
+        return cultureHasChanged
     }
 }

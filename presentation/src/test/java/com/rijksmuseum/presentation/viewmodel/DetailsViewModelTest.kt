@@ -10,11 +10,11 @@ import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -51,7 +51,7 @@ class DetailsViewModelTest {
             getObjectDetailsUseCase.execute(any())
         } returns flow
 
-        coEvery {
+        every {
             savedStateHandle.get<String>(any())
         } returns "id"
 
@@ -79,7 +79,7 @@ class DetailsViewModelTest {
             getObjectDetailsUseCase.execute(any())
         } returns flow
 
-        coEvery {
+        every {
             savedStateHandle.get<String>(any())
         } returns "id"
 
@@ -106,7 +106,7 @@ class DetailsViewModelTest {
             getObjectDetailsUseCase.execute(any())
         } returns flow
 
-        coEvery {
+        every {
             savedStateHandle.get<String>(any())
         } returns "id"
 
@@ -134,7 +134,7 @@ class DetailsViewModelTest {
             getObjectDetailsUseCase.execute(any())
         } returns flow
 
-        coEvery {
+        every {
             savedStateHandle.get<String>(any())
         } returns "id"
 
@@ -144,12 +144,11 @@ class DetailsViewModelTest {
             getObjectDetailsUseCase = getObjectDetailsUseCase,
             dispatcherProvider = dispatcher
         )
-        launch {
-            viewModel.onDialogClicked()
-        }
 
         // Then
         viewModel.events.test {
+            viewModel.onDialogClicked()
+
             assertEquals(DetailsEvent.NavigateBack, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
