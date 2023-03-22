@@ -12,7 +12,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -99,12 +98,11 @@ class HomeViewModelTest {
             getObjectsListUseCase,
             dispatcher
         )
-        launch {
-            viewModel.onLoadingItemReached()
-        }
 
         // Then
         viewModel.state.test {
+            viewModel.onLoadingItemReached()
+
             assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
@@ -125,12 +123,11 @@ class HomeViewModelTest {
             getObjectsListUseCase,
             dispatcher
         )
-        launch {
-            viewModel.onObjectClicked("itemId")
-        }
 
         // Then
         viewModel.events.test {
+            viewModel.onObjectClicked("itemId")
+
             assertEquals(HomeEvent.NavigateToDetail("itemId"), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
@@ -158,12 +155,11 @@ class HomeViewModelTest {
             getObjectsListUseCase,
             dispatcher
         )
-        launch {
-            viewModel.onLoadingItemReached()
-        }
 
         // Then
         viewModel.state.test {
+            viewModel.onLoadingItemReached()
+
             assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
             assertEquals(ScreenState.Loaded(content = HomeState(showError = true, objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
