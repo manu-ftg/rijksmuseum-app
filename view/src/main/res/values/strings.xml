@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="top_bar_title">Rijksmuseum App</string>
+    <string name="retry_button_text">Retry</string>
+    <string name="common_error_message">There was a problem loading the information</string>
+    <string name="common_error_title">Error</string>
+    <string name="pagination_error_message">There was a problem loading more results</string>
+    <string name="common_ok_text">Ok</string>
 </resources>

@@ -60,7 +60,7 @@ class HomeViewModel @Inject constructor(
                             is ScreenState.Loaded -> {
                                 ScreenState.Loaded(
                                     currentState.content.copy(
-                                        isPaging = true,
+                                        isLoadingMore = true,
                                         showError = false
                                     )
                                 )
@@ -91,7 +91,7 @@ class HomeViewModel @Inject constructor(
                             is ScreenState.Loaded -> {
                                 ScreenState.Loaded(
                                     currentState.content.copy(
-                                        isPaging = false,
+                                        isLoadingMore = false,
                                         showError = true
                                     )
                                 )
@@ -106,7 +106,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onLoadingItemReached() {
-        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isPaging == false) {
+        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isLoadingMore == false) {
             loadObjects()
         }
     }
@@ -118,7 +118,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onRetryClicked() {
-        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isPaging == false || _state.value !is ScreenState.Loading) {
+        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isLoadingMore == false || _state.value !is ScreenState.Loading) {
             loadObjects()
         }
     }
@@ -137,7 +137,7 @@ class HomeViewModel @Inject constructor(
 }
 
 data class HomeState(
-    val isPaging: Boolean = false,
+    val isLoadingMore: Boolean = false,
     val objectsList: List<ObjectItemViewData> = listOf(),
     val showError: Boolean = false
 )

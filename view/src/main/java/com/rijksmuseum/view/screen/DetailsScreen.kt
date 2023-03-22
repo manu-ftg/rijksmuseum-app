@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,7 +33,7 @@ import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.viewmodel.DetailsEvent
 import com.rijksmuseum.presentation.viewmodel.DetailsViewModel
 import com.rijksmuseum.view.R
-import com.rijksmuseum.view.designsystem.component.dialog.DialogComponent
+import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
@@ -64,9 +65,9 @@ fun DetailsContent(
     when (state) {
         is ScreenState.Error -> {
             DialogComponent(
-                title = "Error",
-                subtitle = state.message ?: "There was a problem loading the information",
-                firstButtonText = "Ok",
+                title = stringResource(R.string.common_error_title),
+                subtitle = state.message ?: stringResource(R.string.common_error_message),
+                firstButtonText = stringResource(R.string.common_ok_text),
                 onClickFirst = onDialogClicked
             )
         }

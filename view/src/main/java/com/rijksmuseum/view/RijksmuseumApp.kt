@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.rijksmuseum.view.designsystem.component.TopBarComponent
+import com.rijksmuseum.view.designsystem.view.topbar.TopBarComponent
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
 
 @Composable

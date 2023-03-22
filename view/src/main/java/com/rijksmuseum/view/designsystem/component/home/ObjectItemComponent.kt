@@ -1,8 +1,10 @@
 package com.rijksmuseum.view.designsystem.component.home
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -54,13 +57,26 @@ fun ObjectItemComponent(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier.size(64.dp),
                 model = item.imageUrl,
                 contentScale = ContentScale.Crop,
                 contentDescription = "",
-                placeholder = painterResource(id = R.drawable.ic_placeholder),
-                error = painterResource(id = R.drawable.ic_placeholder),
+                loading = {
+                    Box(
+                        modifier = Modifier.background(Color(0xFFC4C4C4)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                    }
+                },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_placeholder),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                    )
+                }
             )
 
             Column(modifier = Modifier.weight(1f, true)) {

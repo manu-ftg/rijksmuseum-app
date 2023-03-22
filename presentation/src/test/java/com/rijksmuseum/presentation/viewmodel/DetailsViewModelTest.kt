@@ -9,6 +9,7 @@ import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,6 +66,33 @@ class DetailsViewModelTest {
         viewModel.state.test {
             assertEquals(ScreenState.Loaded(content = getObjectViewData()), awaitItem())
             cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenStartViewModelUseCaseIsCalled() = runTest {
+        // Given
+        val flow = flow {
+            emit(getObjectDetailsModel())
+        }
+        coEvery {
+            getObjectDetailsUseCase.execute(any())
+        } returns flow
+
+        coEvery {
+            savedStateHandle.get<String>(any())
+        } returns "id"
+
+        // When
+        viewModel = DetailsViewModel(
+            savedStateHandle = savedStateHandle,
+            getObjectDetailsUseCase = getObjectDetailsUseCase,
+            dispatcherProvider = dispatcher
+        )
+
+        // Then
+        coVerify {
+            getObjectDetailsUseCase.execute(any())
         }
     }
 

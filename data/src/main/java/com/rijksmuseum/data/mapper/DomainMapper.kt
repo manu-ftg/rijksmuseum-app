@@ -6,16 +6,15 @@ import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.model.ObjectModel
 
 fun ObjectEntity.toDomain(): ObjectModel? {
-    return if (objectNumber != null && id != null && longTitle != null && title != null && principalOrFirstMaker != null) {
+    return try {
         ObjectModel(
             imageUrl = headerImage?.url,
-            id = id,
-            longTitle = longTitle,
-            objectNumber = objectNumber,
-            title = title,
-            artist = principalOrFirstMaker
+            id = requireNotNull(id),
+            objectNumber = requireNotNull(objectNumber),
+            title = requireNotNull(title),
+            artist = requireNotNull(principalOrFirstMaker)
         )
-    } else {
+    } catch (_: NullPointerException) {
         null
     }
 }

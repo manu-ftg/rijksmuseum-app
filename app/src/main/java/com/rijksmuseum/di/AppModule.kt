@@ -2,6 +2,7 @@ package com.rijksmuseum.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Base64
 import com.rijksmuseum.BuildConfig
 import com.rijksmuseum.data.di.ApiKey
 import com.rijksmuseum.data.di.BaseUrl
@@ -31,7 +32,7 @@ object AppModule {
     @Provides
     @ApiKey
     fun provideApiKey(): String {
-        return BuildConfig.API_KEY
+        return Base64.decode(BuildConfig.API_KEY, Base64.DEFAULT).decodeToString()
     }
 
     @Singleton

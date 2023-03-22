@@ -23,7 +23,6 @@ class ViewMapperTest {
     private fun getObjectModel() = ObjectModel(
         id = "id",
         imageUrl = "url",
-        longTitle = "longTitle",
         objectNumber = "objectNumber",
         title = "title",
         artist = "artist"
@@ -39,11 +38,11 @@ class ViewMapperTest {
 
     private fun getObjectsMap() = mapOf(
         "artistA" to listOf(
-            ObjectModel("id1", "url", "long", "number1", "title", "artistA"),
-            ObjectModel("id2", "url", "long", "number2", "title", "artistA")
+            ObjectModel("id1", "url", "number1", "title", "artistA"),
+            ObjectModel("id2", "url", "number2", "title", "artistA")
         ),
         "artistB" to listOf(
-            ObjectModel("id3", "url", "long", "number3", "title", "artistB")
+            ObjectModel("id3", "url", "number3", "title", "artistB")
         )
     )
 

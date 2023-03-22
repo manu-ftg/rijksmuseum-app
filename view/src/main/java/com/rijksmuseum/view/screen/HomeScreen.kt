@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
@@ -16,13 +17,14 @@ import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.viewmodel.HomeEvent
 import com.rijksmuseum.presentation.viewmodel.HomeState
 import com.rijksmuseum.presentation.viewmodel.HomeViewModel
+import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.component.ErrorScreenComponent
-import com.rijksmuseum.view.designsystem.component.LoadingComponent
-import com.rijksmuseum.view.designsystem.component.dialog.DialogComponent
+import com.rijksmuseum.view.designsystem.component.LoadingScreenComponent
 import com.rijksmuseum.view.designsystem.component.home.HeaderItemComponent
 import com.rijksmuseum.view.designsystem.component.home.LoaderItemComponent
 import com.rijksmuseum.view.designsystem.component.home.ObjectItemComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
 
 @Composable
 fun HomeScreen(
@@ -58,8 +60,8 @@ fun HomeContent(
 ) {
     when (state) {
         is ScreenState.Error -> ErrorScreenComponent(
-            message = "There was a problem loading the information",
-            buttonText = "Retry",
+            message = stringResource(R.string.common_error_message),
+            buttonText = stringResource(R.string.retry_button_text),
             onButtonClicked = onRetryClicked
         )
         is ScreenState.Loaded -> HomeLoadedContent(
@@ -69,7 +71,7 @@ fun HomeContent(
             onRetryClicked = onRetryClicked,
             onDialogDismissed = onDialogDismissed
         )
-        ScreenState.Loading -> LoadingComponent()
+        ScreenState.Loading -> LoadingScreenComponent()
     }
 }
 
@@ -117,11 +119,11 @@ fun HomeLoadedContent(
 
         DialogComponent(
             isVisible = state.showError,
-            title = "Error",
-            subtitle = "There was a problem loading more results",
-            firstButtonText = "Ok",
+            title = stringResource(R.string.common_error_title),
+            subtitle = stringResource(R.string.pagination_error_message),
+            firstButtonText = stringResource(R.string.common_ok_text),
             onClickFirst = onDialogDismissed,
-            secondButtonText = "Retry",
+            secondButtonText = stringResource(R.string.retry_button_text),
             onClickSecond = onRetryClicked)
     }
 }

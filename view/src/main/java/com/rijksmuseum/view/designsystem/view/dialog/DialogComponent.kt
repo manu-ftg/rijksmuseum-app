@@ -1,4 +1,4 @@
-package com.rijksmuseum.view.designsystem.component.dialog
+package com.rijksmuseum.view.designsystem.view.dialog
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.rijksmuseum.view.designsystem.component.button.PrimaryButtonComponent
+import com.rijksmuseum.view.designsystem.view.button.PrimaryButtonComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable

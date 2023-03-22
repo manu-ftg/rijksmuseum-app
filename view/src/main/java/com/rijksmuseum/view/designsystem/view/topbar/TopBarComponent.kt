@@ -1,4 +1,4 @@
-package com.rijksmuseum.view.designsystem.component
+package com.rijksmuseum.view.designsystem.view.topbar
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
