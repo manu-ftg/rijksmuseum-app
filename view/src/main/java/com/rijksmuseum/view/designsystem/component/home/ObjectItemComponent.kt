@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -33,76 +34,81 @@ import coil.compose.SubcomposeAsyncImage
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
-import com.rijksmuseum.view.designsystem.view.SeparatorComponent
 
 @Composable
 fun ObjectItemComponent(
     item: ObjectItemViewData.ObjectItem,
     onClick: (String) -> Unit
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        SeparatorComponent(modifier = Modifier
-            .padding(horizontal = 16.dp)
-        )
 
-        Row(
+        Surface(
             modifier = Modifier
                 .clickable {
                     onClick(item.objectNumber)
-                }
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier.size(64.dp),
-                model = item.imageUrl,
-                contentScale = ContentScale.Crop,
-                contentDescription = "",
-                loading = {
-                    Box(
-                        modifier = Modifier.background(Color(0xFFC4C4C4)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
-                    }
                 },
-                error = {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_placeholder),
-                        contentDescription = "",
-                        contentScale = ContentScale.Crop
+            shape = RoundedCornerShape(4.dp),
+            elevation = 4.dp
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                SubcomposeAsyncImage(
+                    modifier = Modifier.size(64.dp),
+                    model = item.imageUrl,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "",
+                    loading = {
+                        Box(
+                            modifier = Modifier.background(Color(0xFFC4C4C4)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                        }
+                    },
+                    error = {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_placeholder),
+                            contentDescription = "",
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                )
+
+                Column(modifier = Modifier.weight(1f, true)) {
+                    Text(
+                        text = item.title,
+                        style = MaterialTheme.typography.h6,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.author_title, item.artist),
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = item.objectNumber,
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier.align(Alignment.End)
                     )
                 }
-            )
 
-            Column(modifier = Modifier.weight(1f, true)) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.h6,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                Text(
-                    text = stringResource(R.string.author_title, item.artist),
-                    style = MaterialTheme.typography.subtitle1,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 24.dp, end = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = item.objectNumber,
-                    style = MaterialTheme.typography.caption,
-                    modifier = Modifier.align(Alignment.End)
-                )
+                Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Chevron")
             }
-
-            Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Chevron")
         }
     }
 }
