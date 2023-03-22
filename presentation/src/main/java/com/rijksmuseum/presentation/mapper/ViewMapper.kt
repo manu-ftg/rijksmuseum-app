@@ -5,16 +5,18 @@ import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 
-fun Map<String, List<ObjectModel>>.toList(): List<ObjectItemViewData> {
+fun buildObjectItemsList(oldList: List<ObjectItemViewData>, newItems: List<ObjectModel>): List<ObjectItemViewData> {
+    val filteredList = oldList.filter { it !is ObjectItemViewData.LoaderItem }
     return buildList {
-        keys.sorted().forEach { artist ->
-            add(ObjectItemViewData.HeaderItem(artist))
-            addAll(
-                get(artist)?.map {
-                        objectModel ->
-                    objectModel.toViewData()
-                } ?: listOf()
-            )
+        addAll(filteredList)
+        newItems.map { it.toViewData() }.forEachIndexed { index, objectItem ->
+            if (index == 0 && filteredList.isEmpty()
+                || index == 0 && (filteredList.last() as? ObjectItemViewData.ObjectItem)?.artist != objectItem.artist
+                || index > 0 && newItems[index - 1].artist != objectItem.artist
+            ) {
+                add(ObjectItemViewData.HeaderItem(objectItem.artist, objectItem.id))
+            }
+            add(objectItem)
         }
         add(ObjectItemViewData.LoaderItem)
     }.distinctBy { it.key }

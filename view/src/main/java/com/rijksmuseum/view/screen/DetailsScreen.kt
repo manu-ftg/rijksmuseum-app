@@ -1,5 +1,6 @@
 package com.rijksmuseum.view.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,14 +28,14 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import com.rijksmuseum.presentation.viewmodel.DetailsEvent
 import com.rijksmuseum.presentation.viewmodel.DetailsViewModel
 import com.rijksmuseum.view.R
-import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
+import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
 
 @Composable
 fun DetailsScreen(
@@ -93,16 +94,31 @@ fun ObjectDetailsContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        AsyncImage(
+
+        SubcomposeAsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(240.dp)
                 .background(Color(0xFFC4C4C4)),
             model = details.imageUrl,
             contentScale = ContentScale.Fit,
-            contentDescription = "",
-            placeholder = painterResource(id = R.drawable.ic_placeholder),
-            error = painterResource(id = R.drawable.ic_placeholder),)
+            contentDescription = details.imageUrl,
+            loading = {
+                Box(
+                    modifier = Modifier.background(Color(0xFFC4C4C4)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            error = {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_placeholder),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+            }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 

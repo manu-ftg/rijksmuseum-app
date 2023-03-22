@@ -2,13 +2,12 @@ package com.rijksmuseum.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
-import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
-import com.rijksmuseum.presentation.viewdata.ScreenState
-import com.rijksmuseum.presentation.mapper.toList
+import com.rijksmuseum.presentation.mapper.buildObjectItemsList
 import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
 import com.rijksmuseum.presentation.util.DispatcherProvider
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +36,6 @@ class HomeViewModel @Inject constructor(
     private val _events = MutableSharedFlow<HomeEvent>()
     val events = _events.asSharedFlow()
 
-    private val _objectsMap = MutableStateFlow(mutableMapOf<String, MutableList<ObjectModel>>())
     private val _currentPage = MutableStateFlow(INITIAL_PAGE)
 
     init {
@@ -47,7 +45,6 @@ class HomeViewModel @Inject constructor(
     private fun initialize() {
         _state.update { ScreenState.Loading }
         _currentPage.update { INITIAL_PAGE }
-        _objectsMap.update { mutableMapOf() }
         loadObjects()
     }
 
@@ -72,18 +69,17 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .map { objects ->
-                    objects.forEach { objectItem ->
-                        if (_objectsMap.value.containsKey(objectItem.artist)) {
-                            _objectsMap.value[objectItem.artist]?.add(objectItem)
-                        } else {
-                            _objectsMap.value[objectItem.artist] = mutableListOf(objectItem)
-                        }
-                    }
                     _currentPage.update {
                         _currentPage.value + 1
                     }
+
                     ScreenState.Loaded(
-                        HomeState(objectsList = _objectsMap.value.toList())
+                        HomeState(
+                            objectsList = buildObjectItemsList(
+                                oldList = (_state.value as? ScreenState.Loaded)?.content?.objectsList ?: listOf(),
+                                newItems = objects
+                            )
+                        )
                     )
                 }.catch<ScreenState<HomeState>> {
                     emit(

@@ -15,7 +15,7 @@ class ViewMapperTest {
 
     @Test
     fun objectsMapMappedToItemsListCorrectly() {
-        val objectsMap = getObjectsMap()
+        val objectsMap = buildObjectItemsList(listOf(), getObjectsList())
         val objectDisplaysList = getObjectDisplaysList()
         assertEquals(objectDisplaysList, objectsMap.toList())
     }
@@ -36,21 +36,18 @@ class ViewMapperTest {
         imageUrl = "url"
     )
 
-    private fun getObjectsMap() = mapOf(
-        "artistA" to listOf(
-            ObjectModel("id1", "url", "number1", "title", "artistA"),
-            ObjectModel("id2", "url", "number2", "title", "artistA")
-        ),
-        "artistB" to listOf(
-            ObjectModel("id3", "url", "number3", "title", "artistB")
-        )
+    private fun getObjectsList() = listOf(
+        ObjectModel("id1", "url", "number1", "title", "artistA"),
+        ObjectModel("id2", "url", "number2", "title", "artistA"),
+        ObjectModel("id3", "url", "number3", "title", "artistB")
     )
 
+
     private fun getObjectDisplaysList() = listOf(
-        ObjectItemViewData.HeaderItem("artistA"),
+        ObjectItemViewData.HeaderItem("artistA", "id1"),
         ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
         ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
-        ObjectItemViewData.HeaderItem("artistB"),
+        ObjectItemViewData.HeaderItem("artistB", "id3"),
         ObjectItemViewData.ObjectItem("id3", "title", "artistB", "number3", "url"),
         ObjectItemViewData.LoaderItem
     )

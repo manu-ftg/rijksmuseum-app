@@ -4,9 +4,9 @@ import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
 import com.rijksmuseum.presentation.viewdata.ScreenState
-import com.rijksmuseum.presentation.mapper.toList
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
+import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -181,13 +181,12 @@ class HomeViewModelTest {
         ObjectModel("id3", "url", "number3", "title", "artistB")
     )
 
-    private fun getObjectsViewDataList() = mapOf(
-        "artistA" to listOf(
-            ObjectModel("id1", "url", "number1", "title", "artistA"),
-            ObjectModel("id2", "url", "number2", "title", "artistA")
-        ),
-        "artistB" to listOf(
-            ObjectModel("id3", "url", "number3", "title", "artistB")
-        )
-    ).toList()
+    private fun getObjectsViewDataList(): List<ObjectItemViewData> = listOf(
+        ObjectItemViewData.HeaderItem("artistA", "id1"),
+        ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
+        ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
+        ObjectItemViewData.HeaderItem("artistB", "id3"),
+        ObjectItemViewData.ObjectItem("id3", "title", "artistB", "number3", "url"),
+        ObjectItemViewData.LoaderItem
+    )
 }
