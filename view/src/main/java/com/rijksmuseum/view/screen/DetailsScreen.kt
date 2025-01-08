@@ -125,7 +125,7 @@ fun ObjectDetailsContent(
         ) {
             Text(
                 text = details.title,
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h5
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -135,11 +135,11 @@ fun ObjectDetailsContent(
                 style = MaterialTheme.typography.subtitle1
             )
 
-            details.physicalMedium?.let { _physicalMedium ->
+            details.physicalMedium?.let { physicalMedium ->
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = stringResource(R.string.physical_medium_title, _physicalMedium),
+                    text = stringResource(R.string.physical_medium_title, physicalMedium),
                     style = MaterialTheme.typography.subtitle2
                 )
             }
@@ -153,14 +153,21 @@ fun ObjectDetailsContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            if (details.documentation.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(24.dp))
 
-            details.documentation.forEach { documentation ->
                 Text(
-                    text = documentation,
-                    style = MaterialTheme.typography.caption,
-                    modifier = Modifier.padding(top = 8.dp)
+                    text = "Documentation:",
+                    style = MaterialTheme.typography.body2
                 )
+
+                details.documentation.forEach { documentation ->
+                    Text(
+                        text = documentation,
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
             }
         }
     }

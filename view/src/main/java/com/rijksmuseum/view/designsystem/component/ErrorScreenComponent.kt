@@ -35,9 +35,13 @@ fun ErrorScreenComponent(
                 modifier = Modifier.size(64.dp),
                 imageVector = Icons.Filled.ErrorOutline,
                 contentDescription = "Error icon")
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = message)
+
             Spacer(modifier = Modifier.height(8.dp))
+
+            Text(text = message)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             PrimaryButtonComponent(text = buttonText) {
                 onButtonClicked()
             }

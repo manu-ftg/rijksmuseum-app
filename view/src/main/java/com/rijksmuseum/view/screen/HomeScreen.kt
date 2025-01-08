@@ -2,6 +2,7 @@ package com.rijksmuseum.view.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -85,9 +86,12 @@ fun HomeLoadedContent(
     onRetryClicked: () -> Unit,
     onDialogDismissed: () -> Unit
 ) {
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(
@@ -133,7 +137,7 @@ fun HomeLoadedContent(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomePreview() {
     RijksmuseumTheme {
@@ -160,7 +164,7 @@ fun HomePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeIsLoadingPreview() {
     RijksmuseumTheme {
@@ -174,7 +178,7 @@ fun HomeIsLoadingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeErrorPreview() {
     RijksmuseumTheme {
