@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
 import com.rijksmuseum.presentation.mapper.buildObjectItemsList
-import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
-import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,7 +22,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getObjectsListUseCase: GetObjectsListUseCase,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
 ) : ViewModel() {
 
     companion object {
@@ -49,7 +47,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadObjects() {
-        viewModelScope.launch(dispatcherProvider.io) {
+        viewModelScope.launch(Dispatchers.IO) {
             getObjectsListUseCase.execute(_currentPage.value)
                 .onStart {
                     _state.update {
@@ -108,7 +106,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onObjectClicked(objectNumber: String) {
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch {
             _events.emit(HomeEvent.NavigateToDetail(objectNumber))
         }
     }

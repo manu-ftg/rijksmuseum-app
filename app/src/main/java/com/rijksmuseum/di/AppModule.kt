@@ -42,10 +42,4 @@ object AppModule {
     ): SharedPreferences {
         return context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     }
-
-    @Singleton
-    @Provides
-    fun provideDispatcherProvider(): DispatcherProvider {
-        return DefaultDispatcherProvider()
-    }
 }

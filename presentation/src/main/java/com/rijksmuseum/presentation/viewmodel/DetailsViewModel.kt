@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
 import com.rijksmuseum.presentation.mapper.toViewData
-import com.rijksmuseum.presentation.util.DefaultDispatcherProvider
-import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,8 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getObjectDetailsUseCase: GetObjectDetailsUseCase,
-    private val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+    private val getObjectDetailsUseCase: GetObjectDetailsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ScreenState<ObjectViewData>>(ScreenState.Loading)
@@ -44,7 +42,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun loadObjectDetails(objectNumber: String) {
-        viewModelScope.launch(dispatcherProvider.io) {
+        viewModelScope.launch(Dispatchers.IO) {
             getObjectDetailsUseCase.execute(objectNumber)
                 .onStart {
                     _state.update {
@@ -65,7 +63,7 @@ class DetailsViewModel @Inject constructor(
         _state.update {
             ScreenState.Loading
         }
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch {
             _events.emit(DetailsEvent.NavigateBack)
         }
     }
