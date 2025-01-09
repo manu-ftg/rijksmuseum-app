@@ -14,7 +14,7 @@ fun buildObjectItemsList(oldList: List<ObjectItemViewData>, newItems: List<Objec
                 || index == 0 && (filteredList.last() as? ObjectItemViewData.ObjectItem)?.artist != objectItem.artist
                 || index > 0 && newItems[index - 1].artist != objectItem.artist
             ) {
-                add(ObjectItemViewData.HeaderItem(objectItem.artist, objectItem.id))
+                add(ObjectItemViewData.HeaderItem(objectItem.artist))
             }
             add(objectItem)
         }

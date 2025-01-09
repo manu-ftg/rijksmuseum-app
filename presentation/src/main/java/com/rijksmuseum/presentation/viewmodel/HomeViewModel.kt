@@ -2,31 +2,25 @@ package com.rijksmuseum.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
-import com.rijksmuseum.presentation.mapper.buildObjectItemsList
+import com.rijksmuseum.domain.model.ObjectModel
+import com.rijksmuseum.domain.model.PageDataModel
+import com.rijksmuseum.domain.usecase.GetObjectsListPageUseCase
+import com.rijksmuseum.presentation.mapper.toViewData
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getObjectsListUseCase: GetObjectsListUseCase,
+    private val getObjectsListPageUseCase: GetObjectsListPageUseCase,
 ) : ViewModel() {
-
-    companion object {
-        private const val INITIAL_PAGE = 1
-    }
 
     private val _state = MutableStateFlow<ScreenState<HomeState>>(ScreenState.Loading)
     val state = _state.asStateFlow()
@@ -34,73 +28,71 @@ class HomeViewModel @Inject constructor(
     private val _events = MutableSharedFlow<HomeEvent>()
     val events = _events.asSharedFlow()
 
-    private val _currentPage = MutableStateFlow(INITIAL_PAGE)
+    private var currentPage: Int? = null
 
     init {
-        initialize()
-    }
-
-    private fun initialize() {
-        _state.update { ScreenState.Loading }
-        _currentPage.update { INITIAL_PAGE }
         loadObjects()
     }
 
     private fun loadObjects() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getObjectsListUseCase.execute(_currentPage.value)
-                .onStart {
+        when (val currentState = _state.value) {
+            is ScreenState.Loaded -> {
+                if (currentState.content.shouldLoadMoreItems) {
                     _state.update {
-                        when (val currentState = _state.value) {
-                            is ScreenState.Loaded -> {
-                                ScreenState.Loaded(
-                                    currentState.content.copy(
-                                        isLoadingMore = true,
-                                        showError = false
-                                    )
-                                )
-                            }
-                            else -> {
-                                ScreenState.Loading
-                            }
-                        }
-                    }
-                }
-                .map { objects ->
-                    _currentPage.update {
-                        _currentPage.value + 1
-                    }
-
-                    ScreenState.Loaded(
-                        HomeState(
-                            objectsList = buildObjectItemsList(
-                                oldList = (_state.value as? ScreenState.Loaded)?.content?.objectsList ?: listOf(),
-                                newItems = objects
+                        ScreenState.Loaded(
+                            currentState.content.copy(
+                                isLoadingMore = true,
+                                showError = false
                             )
                         )
-                    )
-                }.catch<ScreenState<HomeState>> {
-                    emit(
-                        when (val currentState = _state.value) {
+                    }
+                } else {
+                    return
+                }
+            }
+            else -> {
+                _state.update {
+                    ScreenState.Loading
+                }
+            }
+        }
+        viewModelScope.launch {
+            val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
+            _state.update { currentState ->
+                when (result) {
+                    is PageDataModel.NewData -> {
+                        currentPage = result.page
+                        ScreenState.Loaded(
+                            HomeState(objectsList = getUpdatedList(result.items))
+                        )
+                    }
+                    PageDataModel.EndOfData -> {
+                        (currentState as? ScreenState.Loaded)?.content?.let { content ->
+                            ScreenState.Loaded(
+                                content.copy(isLoadingMore = false, moreObjectsAvailable = false)
+                            )
+                        } ?: ScreenState.Error()
+                    }
+                    is PageDataModel.Error -> {
+                        when (currentState) {
                             is ScreenState.Loaded -> {
                                 ScreenState.Loaded(
-                                    currentState.content.copy(
-                                        isLoadingMore = false,
-                                        showError = true
-                                    )
+                                    currentState.content.copy(isLoadingMore = false, showError = true)
                                 )
                             }
                             else -> {
                                 ScreenState.Error()
                             }
                         }
-                    )
-                }.collect(_state)
+                    }
+                }
+            }
         }
     }
 
     fun onLoadingItemReached() {
-        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isLoadingMore == false) {
+        val shouldLoadMoreItems = (_state.value as? ScreenState.Loaded<HomeState>)?.content?.let { !it.isLoadingMore && it.moreObjectsAvailable } == true
+        if (shouldLoadMoreItems) {
             loadObjects()
         }
     }
@@ -128,13 +120,37 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getUpdatedList(newList: List<ObjectModel>): List<ObjectItemViewData> {
+        var lastItem: ObjectItemViewData? = null
+        return buildList {
+            (_state.value as? ScreenState.Loaded)?.content?.objectsList?.also { currentList ->
+                lastItem = currentList.last()
+                addAll(currentList)
+            }
+            newList.forEach { item ->
+                if (lastItem == null || (lastItem as? ObjectItemViewData.ObjectItem)?.artist != item.artist) {
+                    add(ObjectItemViewData.HeaderItem(item.artist))
+                }
+                item.toViewData().also { viewData ->
+                    lastItem = viewData
+                    add(viewData)
+                }
+            }
+        }
+    }
 }
 
 data class HomeState(
     val isLoadingMore: Boolean = false,
+    val moreObjectsAvailable: Boolean = true,
     val objectsList: List<ObjectItemViewData> = listOf(),
     val showError: Boolean = false
-)
+) {
+    val shouldLoadMoreItems: Boolean get() {
+        return !isLoadingMore && moreObjectsAvailable
+    }
+}
 
 sealed class HomeEvent {
     data class NavigateToDetail(val objectNumber: String): HomeEvent()

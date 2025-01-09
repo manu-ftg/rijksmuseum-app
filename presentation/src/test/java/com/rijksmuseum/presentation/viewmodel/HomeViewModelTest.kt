@@ -2,7 +2,7 @@ package com.rijksmuseum.presentation.viewmodel
 
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
-import com.rijksmuseum.domain.usecase.GetObjectsListUseCase
+import com.rijksmuseum.domain.usecase.GetObjectsListPageUseCase
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
@@ -22,7 +22,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private lateinit var getObjectsListUseCase: GetObjectsListUseCase
+    private lateinit var getObjectsListPageUseCase: GetObjectsListPageUseCase
 
     private lateinit var viewModel: HomeViewModel
 
@@ -32,7 +32,7 @@ class HomeViewModelTest {
     fun setUp() {
         dispatcher = TestDispatcherProvider()
 
-        getObjectsListUseCase = mockk()
+        getObjectsListPageUseCase = mockk()
     }
 
     @Test
@@ -42,13 +42,13 @@ class HomeViewModelTest {
             emit(getObjectsList())
         }
         coEvery {
-            getObjectsListUseCase.execute(any())
+            getObjectsListPageUseCase.execute(any())
         } returns flow
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
-            getObjectsListUseCase,
+            getObjectsListPageUseCase,
             dispatcher
         )
 
@@ -66,12 +66,12 @@ class HomeViewModelTest {
             throw Throwable()
         }
         coEvery {
-            getObjectsListUseCase.execute(any())
+            getObjectsListPageUseCase.execute(any())
         } returns flow
 
         // When
         viewModel = HomeViewModel(
-            getObjectsListUseCase,
+            getObjectsListPageUseCase,
             dispatcher
         )
 
@@ -89,13 +89,13 @@ class HomeViewModelTest {
             emit(getObjectsList())
         }
         coEvery {
-            getObjectsListUseCase.execute(any())
+            getObjectsListPageUseCase.execute(any())
         } returns flow
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
-            getObjectsListUseCase,
+            getObjectsListPageUseCase,
             dispatcher
         )
 
@@ -115,12 +115,12 @@ class HomeViewModelTest {
             emit(getObjectsList())
         }
         coEvery {
-            getObjectsListUseCase.execute(any())
+            getObjectsListPageUseCase.execute(any())
         } returns flow
 
         // When
         viewModel = HomeViewModel(
-            getObjectsListUseCase,
+            getObjectsListPageUseCase,
             dispatcher
         )
 
@@ -143,16 +143,16 @@ class HomeViewModelTest {
             throw Throwable()
         }
         coEvery {
-            getObjectsListUseCase.execute(1)
+            getObjectsListPageUseCase.execute(1)
         } returns flow
         coEvery {
-            getObjectsListUseCase.execute(2)
+            getObjectsListPageUseCase.execute(2)
         } returns errorFlow
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
         viewModel = HomeViewModel(
-            getObjectsListUseCase,
+            getObjectsListPageUseCase,
             dispatcher
         )
 

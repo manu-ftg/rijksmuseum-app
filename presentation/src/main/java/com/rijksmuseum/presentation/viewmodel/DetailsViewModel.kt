@@ -8,14 +8,10 @@ import com.rijksmuseum.presentation.mapper.toViewData
 import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,20 +38,21 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun loadObjectDetails(objectNumber: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            getObjectDetailsUseCase.execute(objectNumber)
-                .onStart {
-                    _state.update {
-                        ScreenState.Loading
+        _state.update {
+            ScreenState.Loading
+        }
+        viewModelScope.launch {
+            val result = getObjectDetailsUseCase.execute(objectNumber)
+            _state.update {
+                result.fold(
+                    onSuccess = { objectDetails ->
+                        ScreenState.Loaded(objectDetails.toViewData())
+                    },
+                    onFailure = {
+                        ScreenState.Error()
                     }
-                }
-                .map { objectDetails ->
-                    ScreenState.Loaded(objectDetails.toViewData())
-                }
-                .catch<ScreenState<ObjectViewData>> {
-                    emit(ScreenState.Error())
-                }
-                .collect(_state)
+                )
+            }
         }
     }
 

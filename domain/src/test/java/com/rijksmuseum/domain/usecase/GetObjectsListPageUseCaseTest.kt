@@ -15,11 +15,11 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GetObjectsListUseCaseTest {
+class GetObjectsListPageUseCaseTest {
 
     private lateinit var repository: RijksmuseumRepository
 
-    private lateinit var useCase: GetObjectsListUseCase
+    private lateinit var useCase: GetObjectsListPageUseCase
 
     @Before
     fun setUp() {
@@ -33,17 +33,17 @@ class GetObjectsListUseCaseTest {
             emit(getObjectsList())
         }
         coEvery {
-            repository.getObjects(any())
+            repository.fetchObjects(any())
         } returns flow
         val page = 1
 
         // When
-        useCase = GetObjectsListUseCase(repository)
+        useCase = GetObjectsListPageUseCase(repository)
         useCase.execute(page)
 
         // Then
         coVerify {
-            repository.getObjects(page)
+            repository.fetchObjects(page)
         }
     }
 
@@ -54,12 +54,12 @@ class GetObjectsListUseCaseTest {
             emit(getObjectsList())
         }
         coEvery {
-            repository.getObjects(any())
+            repository.fetchObjects(any())
         } returns flow
         val page = 1
 
         // When
-        useCase = GetObjectsListUseCase(repository)
+        useCase = GetObjectsListPageUseCase(repository)
 
         // Then
         useCase.execute(page).test {
