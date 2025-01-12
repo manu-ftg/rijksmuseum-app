@@ -137,7 +137,7 @@ class HomeViewModel @Inject constructor(
                     add(viewData)
                 }
             }
-        }
+        }.distinctBy { it.key }
     }
 }
 
