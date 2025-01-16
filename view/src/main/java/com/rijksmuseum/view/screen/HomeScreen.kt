@@ -95,8 +95,7 @@ fun HomeLoadedContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(
-                items = state.objectsList,
-                key = { _, item -> item.key }
+                items = state.objectsList
             ) { index, item ->
                 when (item) {
                     is ObjectItemViewData.HeaderItem -> {

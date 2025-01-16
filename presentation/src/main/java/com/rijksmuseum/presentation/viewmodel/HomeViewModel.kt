@@ -2,10 +2,10 @@ package com.rijksmuseum.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rijksmuseum.domain.model.ObjectModel
 import com.rijksmuseum.domain.model.PageDataModel
 import com.rijksmuseum.domain.usecase.GetObjectsListPageUseCase
-import com.rijksmuseum.presentation.mapper.toViewData
+import com.rijksmuseum.presentation.mapper.buildObjectItemsList
+import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getObjectsListPageUseCase: GetObjectsListPageUseCase,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<ScreenState<HomeState>>(ScreenState.Loading)
@@ -56,20 +57,29 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.main) {
             val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
             _state.update { currentState ->
                 when (result) {
                     is PageDataModel.NewData -> {
                         currentPage = result.page
                         ScreenState.Loaded(
-                            HomeState(objectsList = getUpdatedList(result.items))
+                            HomeState(
+                                objectsList = buildObjectItemsList(
+                                    oldList = (currentState as? ScreenState.Loaded)?.content?.objectsList,
+                                    newItems = result.items
+                                )
+                            )
                         )
                     }
                     PageDataModel.EndOfData -> {
                         (currentState as? ScreenState.Loaded)?.content?.let { content ->
                             ScreenState.Loaded(
-                                content.copy(isLoadingMore = false, moreObjectsAvailable = false)
+                                content.copy(
+                                    objectsList = content.objectsList.filter { it !is ObjectItemViewData.LoaderItem },
+                                    isLoadingMore = false,
+                                    moreObjectsAvailable = false
+                                )
                             )
                         } ?: ScreenState.Error()
                     }
@@ -98,7 +108,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onObjectClicked(objectNumber: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.main) {
             _events.emit(HomeEvent.NavigateToDetail(objectNumber))
         }
     }
@@ -119,25 +129,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun getUpdatedList(newList: List<ObjectModel>): List<ObjectItemViewData> {
-        var lastItem: ObjectItemViewData? = null
-        return buildList {
-            (_state.value as? ScreenState.Loaded)?.content?.objectsList?.also { currentList ->
-                lastItem = currentList.last()
-                addAll(currentList)
-            }
-            newList.forEach { item ->
-                if (lastItem == null || (lastItem as? ObjectItemViewData.ObjectItem)?.artist != item.artist) {
-                    add(ObjectItemViewData.HeaderItem(item.artist))
-                }
-                item.toViewData().also { viewData ->
-                    lastItem = viewData
-                    add(viewData)
-                }
-            }
-        }.distinctBy { it.key }
     }
 }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rijksmuseum.domain.usecase.GetObjectDetailsUseCase
 import com.rijksmuseum.presentation.mapper.toViewData
+import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.viewdata.ObjectViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider,
     private val getObjectDetailsUseCase: GetObjectDetailsUseCase
 ) : ViewModel() {
 
@@ -41,7 +43,7 @@ class DetailsViewModel @Inject constructor(
         _state.update {
             ScreenState.Loading
         }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.main) {
             val result = getObjectDetailsUseCase.execute(objectNumber)
             _state.update {
                 result.fold(
@@ -60,7 +62,7 @@ class DetailsViewModel @Inject constructor(
         _state.update {
             ScreenState.Loading
         }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.main) {
             _events.emit(DetailsEvent.NavigateBack)
         }
     }

@@ -2,6 +2,7 @@ package com.rijksmuseum.presentation.viewmodel
 
 import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
+import com.rijksmuseum.domain.model.PageDataModel
 import com.rijksmuseum.domain.usecase.GetObjectsListPageUseCase
 import com.rijksmuseum.presentation.util.DispatcherProvider
 import com.rijksmuseum.presentation.util.TestDispatcherProvider
@@ -11,11 +12,10 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -30,20 +30,20 @@ class HomeViewModelTest {
 
     @Before
     fun setUp() {
-        dispatcher = TestDispatcherProvider()
-
         getObjectsListPageUseCase = mockk()
+        dispatcher = TestDispatcherProvider()
     }
 
     @Test
     fun whenStartViewModelAndObjectListIsLoaded() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
+        val model = PageDataModel.NewData(
+            1,
+            getObjectsList()
+        )
         coEvery {
             getObjectsListPageUseCase.execute(any())
-        } returns flow
+        } returns model
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
@@ -62,12 +62,10 @@ class HomeViewModelTest {
     @Test
     fun whenStartViewModelAndErrorIsReceived() = runTest {
         // Given
-        val flow = flow<List<ObjectModel>> {
-            throw Throwable()
-        }
+        val errorModel = PageDataModel.Error(Throwable())
         coEvery {
             getObjectsListPageUseCase.execute(any())
-        } returns flow
+        } returns errorModel
 
         // When
         viewModel = HomeViewModel(
@@ -85,12 +83,13 @@ class HomeViewModelTest {
     @Test
     fun whenMoreItemsAreLoaded() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
+        val model = PageDataModel.NewData(
+            1,
+            getObjectsList()
+        )
         coEvery {
             getObjectsListPageUseCase.execute(any())
-        } returns flow
+        } returns model
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
@@ -111,12 +110,13 @@ class HomeViewModelTest {
     @Test
     fun whenItemIsClickedNavigateToDetailScreen() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
+        val model = PageDataModel.NewData(
+            1,
+            getObjectsList()
+        )
         coEvery {
             getObjectsListPageUseCase.execute(any())
-        } returns flow
+        } returns model
 
         // When
         viewModel = HomeViewModel(
@@ -136,18 +136,18 @@ class HomeViewModelTest {
     @Test
     fun whenLoadMoreItemsFailsShowErrorDialog() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
-        val errorFlow = flow<List<ObjectModel>> {
-            throw Throwable()
-        }
+        val model = PageDataModel.NewData(
+            1,
+            getObjectsList()
+        )
+        val errorModel = PageDataModel.Error(Throwable())
+
         coEvery {
-            getObjectsListPageUseCase.execute(1)
-        } returns flow
+            getObjectsListPageUseCase.execute(null)
+        } returns model
         coEvery {
             getObjectsListPageUseCase.execute(2)
-        } returns errorFlow
+        } returns errorModel
         val objectsViewDataList = getObjectsViewDataList()
 
         // When
@@ -161,6 +161,7 @@ class HomeViewModelTest {
             viewModel.onLoadingItemReached()
 
             assertEquals(ScreenState.Loaded(content = HomeState(objectsList = objectsViewDataList)), awaitItem())
+            assertEquals(ScreenState.Loaded(content = HomeState(isLoadingMore  = true, objectsList = objectsViewDataList)), awaitItem())
             assertEquals(ScreenState.Loaded(content = HomeState(showError = true, objectsList = objectsViewDataList)), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
@@ -178,10 +179,10 @@ class HomeViewModelTest {
     )
 
     private fun getObjectsViewDataList(): List<ObjectItemViewData> = listOf(
-        ObjectItemViewData.HeaderItem("artistA", "id1"),
+        ObjectItemViewData.HeaderItem("artistA"),
         ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
         ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
-        ObjectItemViewData.HeaderItem("artistB", "id3"),
+        ObjectItemViewData.HeaderItem("artistB"),
         ObjectItemViewData.ObjectItem("id3", "title", "artistB", "number3", "url"),
         ObjectItemViewData.LoaderItem
     )

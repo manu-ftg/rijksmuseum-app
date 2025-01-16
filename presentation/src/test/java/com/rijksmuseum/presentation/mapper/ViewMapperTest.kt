@@ -44,10 +44,10 @@ class ViewMapperTest {
 
 
     private fun getObjectViewDatasList() = listOf(
-        ObjectItemViewData.HeaderItem("artistA", "id1"),
+        ObjectItemViewData.HeaderItem("artistA"),
         ObjectItemViewData.ObjectItem("id1", "title", "artistA", "number1", "url"),
         ObjectItemViewData.ObjectItem("id2", "title", "artistA", "number2", "url"),
-        ObjectItemViewData.HeaderItem("artistB", "id3"),
+        ObjectItemViewData.HeaderItem("artistB"),
         ObjectItemViewData.ObjectItem("id3", "title", "artistB", "number3", "url"),
         ObjectItemViewData.LoaderItem
     )

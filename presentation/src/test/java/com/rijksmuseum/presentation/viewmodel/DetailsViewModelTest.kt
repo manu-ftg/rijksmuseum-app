@@ -14,11 +14,10 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -44,12 +43,12 @@ class DetailsViewModelTest {
     @Test
     fun whenStartViewModelAndObjectIsLoaded() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectDetailsModel())
-        }
+        val result = Result.success(
+            getObjectDetailsModel()
+        )
         coEvery {
             getObjectDetailsUseCase.execute(any())
-        } returns flow
+        } returns result
 
         every {
             savedStateHandle.get<String>(any())
@@ -58,8 +57,8 @@ class DetailsViewModelTest {
         // When
         viewModel = DetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getObjectDetailsUseCase = getObjectDetailsUseCase,
-            dispatcherProvider = dispatcher
+            dispatcherProvider = dispatcher,
+            getObjectDetailsUseCase = getObjectDetailsUseCase
         )
 
         // Then
@@ -72,12 +71,12 @@ class DetailsViewModelTest {
     @Test
     fun whenStartViewModelUseCaseIsCalled() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectDetailsModel())
-        }
+        val result = Result.success(
+            getObjectDetailsModel()
+        )
         coEvery {
             getObjectDetailsUseCase.execute(any())
-        } returns flow
+        } returns result
 
         every {
             savedStateHandle.get<String>(any())
@@ -86,8 +85,8 @@ class DetailsViewModelTest {
         // When
         viewModel = DetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getObjectDetailsUseCase = getObjectDetailsUseCase,
-            dispatcherProvider = dispatcher
+            dispatcherProvider = dispatcher,
+            getObjectDetailsUseCase = getObjectDetailsUseCase
         )
 
         // Then
@@ -99,12 +98,10 @@ class DetailsViewModelTest {
     @Test
     fun whenStartViewModelAndLoadObjectFailsShowError() = runTest {
         // Given
-        val flow = flow<ObjectDetailsModel> {
-            throw Throwable()
-        }
+        val errorResult = Result.failure<ObjectDetailsModel>(Throwable())
         coEvery {
             getObjectDetailsUseCase.execute(any())
-        } returns flow
+        } returns errorResult
 
         every {
             savedStateHandle.get<String>(any())
@@ -113,8 +110,8 @@ class DetailsViewModelTest {
         // When
         viewModel = DetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getObjectDetailsUseCase = getObjectDetailsUseCase,
-            dispatcherProvider = dispatcher
+            dispatcherProvider = dispatcher,
+            getObjectDetailsUseCase = getObjectDetailsUseCase
         )
 
         // Then
@@ -127,12 +124,10 @@ class DetailsViewModelTest {
     @Test
     fun whenErrorMessageIsClickedNavigateBack() = runTest {
         // Given
-        val flow = flow<ObjectDetailsModel> {
-            throw Throwable()
-        }
+        val errorResult = Result.failure<ObjectDetailsModel>(Throwable())
         coEvery {
             getObjectDetailsUseCase.execute(any())
-        } returns flow
+        } returns errorResult
 
         every {
             savedStateHandle.get<String>(any())
@@ -141,8 +136,8 @@ class DetailsViewModelTest {
         // When
         viewModel = DetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getObjectDetailsUseCase = getObjectDetailsUseCase,
-            dispatcherProvider = dispatcher
+            dispatcherProvider = dispatcher,
+            getObjectDetailsUseCase = getObjectDetailsUseCase
         )
 
         // Then
