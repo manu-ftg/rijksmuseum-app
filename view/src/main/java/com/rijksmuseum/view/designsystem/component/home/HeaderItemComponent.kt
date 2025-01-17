@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -17,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.unit.dp
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.designsystem.view.SeparatorComponent
 import com.rijksmuseum.view.util.LightAndDarkPreviews
 import com.rijksmuseum.view.util.RijksmuseumPreview
@@ -34,28 +33,28 @@ fun HeaderItemComponent(
         if (isSeparatorVisible) {
             SeparatorComponent(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = RijksmuseumTheme.spacing.x4)
                     .alpha(0.1f)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x4))
         }
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(RijksmuseumTheme.spacing.x8),
                 imageVector = Icons.Filled.Person,
                 contentDescription = "Author icon")
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(RijksmuseumTheme.spacing.x2))
 
             Text(
                 modifier = Modifier
                     .weight(1f),
                 text = item.artist,
-                style = MaterialTheme.typography.h6
+                style = RijksmuseumTheme.typography.h6
             )
         }
     }

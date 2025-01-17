@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.view.R
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.util.LightAndDarkPreviews
 import com.rijksmuseum.view.util.RijksmuseumPreview
 
@@ -45,16 +45,16 @@ fun ObjectItemComponent(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(elevation = 2.dp, shape = MaterialTheme.shapes.large)
+            .shadow(elevation = 2.dp, shape = RijksmuseumTheme.shapes.large)
             .clickable {
                 onClick(item.objectNumber)
             }
-            .background(color = MaterialTheme.colors.surface, shape = MaterialTheme.shapes.large)
-            .padding(16.dp),
+            .background(color = RijksmuseumTheme.colorScheme.surface, shape = RijksmuseumTheme.shapes.large)
+            .padding(RijksmuseumTheme.spacing.x4),
         verticalAlignment = Alignment.CenterVertically
     ) {
         SubcomposeAsyncImage(
-            modifier = Modifier.size(64.dp),
+            modifier = Modifier.size(RijksmuseumTheme.spacing.x16),
             model = item.imageUrl,
             contentScale = ContentScale.Crop,
             contentDescription = "",
@@ -63,7 +63,7 @@ fun ObjectItemComponent(
                     modifier = Modifier.background(Color(0xFFC4C4C4)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                    CircularProgressIndicator(modifier = Modifier.size(RijksmuseumTheme.spacing.x8))
                 }
             },
             error = {
@@ -78,30 +78,30 @@ fun ObjectItemComponent(
         Column(modifier = Modifier.weight(1f, true)) {
             Text(
                 text = item.title,
-                style = MaterialTheme.typography.subtitle1,
+                style = RijksmuseumTheme.typography.subtitle1,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = RijksmuseumTheme.spacing.x4)
             )
 
             Text(
                 text = stringResource(R.string.author_title, item.artist),
-                style = MaterialTheme.typography.body2,
+                style = RijksmuseumTheme.typography.body2,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                modifier = Modifier.padding(start = RijksmuseumTheme.spacing.x4, end = RijksmuseumTheme.spacing.x4)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x4))
 
             Text(
                 text = item.objectNumber,
-                style = MaterialTheme.typography.caption,
+                style = RijksmuseumTheme.typography.caption,
                 modifier = Modifier.align(Alignment.End)
             )
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(RijksmuseumTheme.spacing.x2))
 
         Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Chevron")
     }
@@ -112,8 +112,8 @@ fun ObjectItemComponent(
 fun ObjectItemPreview() {
     RijksmuseumPreview {
         Column(
-            modifier = Modifier.padding(16.dp).fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(RijksmuseumTheme.spacing.x4).fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(RijksmuseumTheme.spacing.x4)
         ) {
             ObjectItemComponent(
                 item = ObjectItemViewData.ObjectItem(

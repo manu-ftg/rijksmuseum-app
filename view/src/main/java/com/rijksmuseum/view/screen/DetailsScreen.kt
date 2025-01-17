@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -78,7 +77,7 @@ fun DetailsContent(
                 CircularProgressIndicator(
                     modifier = Modifier.padding(24.dp),
                     strokeWidth = 2.dp,
-                    color = MaterialTheme.colors.primary
+                    color = RijksmuseumTheme.colorScheme.primary
                 )
             }
         }
@@ -125,14 +124,14 @@ fun ObjectDetailsContent(
         ) {
             Text(
                 text = details.title,
-                style = MaterialTheme.typography.h5
+                style = RijksmuseumTheme.typography.h5
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(R.string.author_title, details.artist),
-                style = MaterialTheme.typography.subtitle1
+                style = RijksmuseumTheme.typography.subtitle1
             )
 
             details.physicalMedium?.let { physicalMedium ->
@@ -140,7 +139,7 @@ fun ObjectDetailsContent(
 
                 Text(
                     text = stringResource(R.string.physical_medium_title, physicalMedium),
-                    style = MaterialTheme.typography.subtitle2
+                    style = RijksmuseumTheme.typography.subtitle2
                 )
             }
 
@@ -149,7 +148,7 @@ fun ObjectDetailsContent(
             details.description?.let { _description ->
                 Text(
                     text = _description,
-                    style = MaterialTheme.typography.body1
+                    style = RijksmuseumTheme.typography.body1
                 )
             }
 
@@ -158,13 +157,13 @@ fun ObjectDetailsContent(
 
                 Text(
                     text = "Documentation:",
-                    style = MaterialTheme.typography.body2
+                    style = RijksmuseumTheme.typography.body2
                 )
 
                 details.documentation.forEach { documentation ->
                     Text(
                         text = documentation,
-                        style = MaterialTheme.typography.caption,
+                        style = RijksmuseumTheme.typography.caption,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }

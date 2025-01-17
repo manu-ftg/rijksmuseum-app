@@ -24,7 +24,7 @@ fun RijksmuseumPreview(
 ) {
     RijksmuseumTheme {
         Surface(
-            color = MaterialTheme.colors.background
+            color = RijksmuseumTheme.colorScheme.background
         ) {
             content()
         }

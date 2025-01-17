@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,9 +21,11 @@ fun LoaderItemComponent() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier
-                .padding(16.dp).size(24.dp).align(Alignment.Center),
+                .padding(RijksmuseumTheme.spacing.x4)
+                .size(RijksmuseumTheme.spacing.x6)
+                .align(Alignment.Center),
             strokeWidth = 2.dp,
-            color = MaterialTheme.colors.primary
+            color = RijksmuseumTheme.colorScheme.primary
         )
     }
 }
