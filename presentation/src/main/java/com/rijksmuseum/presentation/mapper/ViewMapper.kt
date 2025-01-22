@@ -9,7 +9,7 @@ fun buildObjectItemsList(oldList: List<ObjectItemViewData>?, newItems: List<Obje
     var lastItem: ObjectItemViewData? = null
     return buildList {
         oldList?.filter { it !is ObjectItemViewData.LoaderItem }?.also { currentList ->
-            lastItem = currentList.last()
+            lastItem = currentList.lastOrNull()
             addAll(currentList)
         }
         newItems.forEach { item ->
