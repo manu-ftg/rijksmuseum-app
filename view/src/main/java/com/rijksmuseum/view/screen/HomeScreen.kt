@@ -27,6 +27,8 @@ import com.rijksmuseum.view.designsystem.component.home.LoaderItemComponent
 import com.rijksmuseum.view.designsystem.component.home.ObjectItemComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
+import com.rijksmuseum.view.util.LightAndDarkPreviews
+import com.rijksmuseum.view.util.RijksmuseumPreview
 
 @Composable
 fun HomeScreen(
@@ -35,7 +37,7 @@ fun HomeScreen(
 ) {
     val state: ScreenState<HomeState> by viewModel.state.collectAsState()
 
-    LaunchedEffect(viewModel.events) {
+    LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HomeEvent.NavigateToDetail -> navigateToDetailScreen(event.objectNumber)
@@ -135,10 +137,10 @@ fun HomeLoadedContent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@LightAndDarkPreviews
 @Composable
 fun HomePreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Loaded(
                 HomeState(
@@ -165,7 +167,7 @@ fun HomePreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeIsLoadingPreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Loading,
             onItemClicked = {},
@@ -179,7 +181,7 @@ fun HomeIsLoadingPreview() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeErrorPreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Error(),
             onItemClicked = {},

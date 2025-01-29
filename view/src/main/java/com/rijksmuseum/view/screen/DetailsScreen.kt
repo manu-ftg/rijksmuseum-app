@@ -43,7 +43,7 @@ fun DetailsScreen(
 ) {
     val state: ScreenState<ObjectViewData> by viewModel.state.collectAsState()
 
-    LaunchedEffect(viewModel.events) {
+    LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is DetailsEvent.NavigateBack -> navigateBack()
@@ -71,11 +71,13 @@ fun DetailsContent(
                 onClickFirst = onDialogClicked
             )
         }
+
         is ScreenState.Loaded -> ObjectDetailsContent(state.content)
+
         ScreenState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.padding(RijksmuseumTheme.spacing.x6),
                     strokeWidth = 2.dp,
                     color = RijksmuseumTheme.colorScheme.primary
                 )
@@ -120,14 +122,16 @@ fun ObjectDetailsContent(
         )
 
         Column(
-            modifier = Modifier.padding(16.dp).fillMaxWidth()
+            modifier = Modifier
+                .padding(RijksmuseumTheme.spacing.x4)
+                .fillMaxWidth()
         ) {
             Text(
                 text = details.title,
                 style = RijksmuseumTheme.typography.h5
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x2))
 
             Text(
                 text = stringResource(R.string.author_title, details.artist),
@@ -135,7 +139,7 @@ fun ObjectDetailsContent(
             )
 
             details.physicalMedium?.let { physicalMedium ->
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x2))
 
                 Text(
                     text = stringResource(R.string.physical_medium_title, physicalMedium),
@@ -143,7 +147,7 @@ fun ObjectDetailsContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x4))
 
             details.description?.let { _description ->
                 Text(
@@ -153,7 +157,7 @@ fun ObjectDetailsContent(
             }
 
             if (details.documentation.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x6))
 
                 Text(
                     text = "Documentation:",
@@ -164,21 +168,11 @@ fun ObjectDetailsContent(
                     Text(
                         text = documentation,
                         style = RijksmuseumTheme.typography.caption,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = RijksmuseumTheme.spacing.x2)
                     )
                 }
             }
         }
-    }
-}
-
-@Preview(
-    showBackground = true,
-    device = Devices.PIXEL_4)
-@Composable
-fun DetailsScreenErrorPreview() {
-    RijksmuseumTheme {
-        DetailsContent(ScreenState.Error())
     }
 }
 
@@ -192,11 +186,21 @@ fun DetailsLoadedPreview() {
             "id",
             "imageUrl",
             "This is the title",
-        "subtitle",
-        "artist",
-        "This is a not really long description",
-        listOf("documentation1", "documentation2"),
-        "physicalMedium"
+            "subtitle",
+            "artist",
+            "This is a not really long description",
+            listOf("documentation1", "documentation2"),
+            "physicalMedium"
         )))
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = Devices.PIXEL_4)
+@Composable
+fun DetailsScreenErrorPreview() {
+    RijksmuseumTheme {
+        DetailsContent(ScreenState.Error())
     }
 }

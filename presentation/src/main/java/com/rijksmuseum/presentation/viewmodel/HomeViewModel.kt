@@ -36,9 +36,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadObjects() {
-        when (val currentState = _state.value) {
+        val shouldLoadItems = when (val currentState = _state.value) {
             is ScreenState.Loaded -> {
-                if (currentState.content.shouldLoadMoreItems) {
+                if (currentState.content.shouldLoadMoreItems && !currentState.content.isLoadingMore) {
                     _state.update {
                         ScreenState.Loaded(
                             currentState.content.copy(
@@ -47,51 +47,55 @@ class HomeViewModel @Inject constructor(
                             )
                         )
                     }
+                    true
                 } else {
-                    return
+                    false
                 }
             }
             else -> {
                 _state.update {
                     ScreenState.Loading
                 }
+                true
             }
         }
-        viewModelScope.launch(dispatcherProvider.main) {
-            val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
-            _state.update { currentState ->
-                when (result) {
-                    is PageDataModel.NewData -> {
-                        currentPage = result.page
-                        ScreenState.Loaded(
-                            HomeState(
-                                objectsList = buildObjectItemsList(
-                                    oldList = (currentState as? ScreenState.Loaded)?.content?.objectsList,
-                                    newItems = result.items
-                                )
-                            )
-                        )
-                    }
-                    PageDataModel.EndOfData -> {
-                        (currentState as? ScreenState.Loaded)?.content?.let { content ->
+        if (shouldLoadItems) {
+            viewModelScope.launch(dispatcherProvider.main) {
+                val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
+                _state.update { currentState ->
+                    when (result) {
+                        is PageDataModel.NewData -> {
+                            currentPage = result.page
                             ScreenState.Loaded(
-                                content.copy(
-                                    objectsList = content.objectsList.filter { it !is ObjectItemViewData.LoaderItem },
-                                    isLoadingMore = false,
-                                    moreObjectsAvailable = false
+                                HomeState(
+                                    objectsList = buildObjectItemsList(
+                                        oldList = (currentState as? ScreenState.Loaded)?.content?.objectsList,
+                                        newItems = result.items
+                                    )
                                 )
                             )
-                        } ?: ScreenState.Error()
-                    }
-                    is PageDataModel.Error -> {
-                        when (currentState) {
-                            is ScreenState.Loaded -> {
+                        }
+                        PageDataModel.EndOfData -> {
+                            (currentState as? ScreenState.Loaded)?.content?.let { content ->
                                 ScreenState.Loaded(
-                                    currentState.content.copy(isLoadingMore = false, showError = true)
+                                    content.copy(
+                                        objectsList = content.objectsList.filter { it !is ObjectItemViewData.LoaderItem },
+                                        isLoadingMore = false,
+                                        moreObjectsAvailable = false
+                                    )
                                 )
-                            }
-                            else -> {
-                                ScreenState.Error()
+                            } ?: ScreenState.Error()
+                        }
+                        is PageDataModel.Error -> {
+                            when (currentState) {
+                                is ScreenState.Loaded -> {
+                                    ScreenState.Loaded(
+                                        currentState.content.copy(isLoadingMore = false, showError = true)
+                                    )
+                                }
+                                else -> {
+                                    ScreenState.Error()
+                                }
                             }
                         }
                     }
@@ -101,10 +105,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onLoadingItemReached() {
-        val shouldLoadMoreItems = (_state.value as? ScreenState.Loaded<HomeState>)?.content?.let { !it.isLoadingMore && it.moreObjectsAvailable } == true
-        if (shouldLoadMoreItems) {
-            loadObjects()
-        }
+        loadObjects()
     }
 
     fun onObjectClicked(objectNumber: String) {
@@ -114,9 +115,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onRetryClicked() {
-        if ((_state.value as? ScreenState.Loaded<HomeState>)?.content?.isLoadingMore == false || _state.value !is ScreenState.Loading) {
-            loadObjects()
-        }
+        loadObjects()
     }
 
     fun onDialogDismissed() {

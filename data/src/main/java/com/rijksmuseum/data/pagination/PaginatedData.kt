@@ -17,7 +17,10 @@ data class PaginatedData<T>(
         } else {
             withContext(Dispatchers.IO) {
                 try {
-                    PageDataModel.NewData(pageNumber, fetchPage(pageNumber, pageSize))
+                    PageDataModel.NewData(
+                        page = pageNumber,
+                        items = fetchPage(pageNumber, pageSize)
+                    )
                 } catch (error: Throwable) {
                     PageDataModel.Error(error)
                 }
