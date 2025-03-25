@@ -50,11 +50,6 @@ fun RijksmuseumNavHost(
     }
 }
 
-sealed class AppNavigation(val route: String) {
-    object Home : AppNavigation(route = "home_screen")
-    object Details : AppNavigation(route = "detail_screen/{objectId}")
-}
-
 fun NavBackStackEntry?.isBackButtonVisible(): Boolean {
     return this?.destination?.route != null && this.destination.route != AppNavigation.Home.route
 }

@@ -22,22 +22,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
 @Preview(
     device = Devices.PIXEL_4
 )
-fun MainActivityLightPreview() {
-    RijksmuseumTheme {
-        RijksmuseumApp()
-    }
-}
-
-@Composable
 @Preview(
     device = Devices.PIXEL_4,
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
-fun MainActivityDarkPreview() {
+@Composable
+fun MainActivityPreview() {
     RijksmuseumTheme {
         RijksmuseumApp()
     }

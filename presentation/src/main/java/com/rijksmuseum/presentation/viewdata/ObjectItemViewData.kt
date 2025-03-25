@@ -1,9 +1,9 @@
 package com.rijksmuseum.presentation.viewdata
 
-sealed class ObjectItemViewData(val key: String) {
-    data class HeaderItem(val artist: String, val id: String = "id"): ObjectItemViewData("${artist}_$id")
+sealed class ObjectItemViewData() {
+    data class HeaderItem(val artist: String): ObjectItemViewData()
 
-    object LoaderItem: ObjectItemViewData("loader_key")
+    object LoaderItem: ObjectItemViewData()
 
     data class ObjectItem(
         val id: String,
@@ -11,5 +11,5 @@ sealed class ObjectItemViewData(val key: String) {
         val artist: String,
         val objectNumber: String,
         val imageUrl: String? = null
-    ): ObjectItemViewData(objectNumber)
+    ): ObjectItemViewData()
 }

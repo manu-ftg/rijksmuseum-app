@@ -14,7 +14,7 @@ fun ObjectEntity.toDomain(): ObjectModel? {
             title = requireNotNull(title),
             artist = requireNotNull(principalOrFirstMaker)
         )
-    } catch (_: NullPointerException) {
+    } catch (_: Throwable) {
         null
     }
 }

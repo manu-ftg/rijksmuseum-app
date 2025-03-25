@@ -14,7 +14,7 @@ import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.designsystem.view.button.PrimaryButtonComponent
 
 @Composable
@@ -28,16 +28,20 @@ fun ErrorScreenComponent(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(RijksmuseumTheme.spacing.x6),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier.size(RijksmuseumTheme.spacing.x16),
                 imageVector = Icons.Filled.ErrorOutline,
                 contentDescription = "Error icon")
-            Spacer(modifier = Modifier.height(16.dp))
+
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x2))
+
             Text(text = message)
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(RijksmuseumTheme.spacing.x4))
+
             PrimaryButtonComponent(text = buttonText) {
                 onButtonClicked()
             }

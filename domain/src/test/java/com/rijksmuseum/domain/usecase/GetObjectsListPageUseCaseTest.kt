@@ -1,25 +1,22 @@
 package com.rijksmuseum.domain.usecase
 
-import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectModel
+import com.rijksmuseum.domain.model.PageDataModel
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class GetObjectsListUseCaseTest {
+class GetObjectsListPageUseCaseTest {
 
     private lateinit var repository: RijksmuseumRepository
 
-    private lateinit var useCase: GetObjectsListUseCase
+    private lateinit var useCase: GetObjectsListPageUseCase
 
     @Before
     fun setUp() {
@@ -29,16 +26,14 @@ class GetObjectsListUseCaseTest {
     @Test
     fun whenUseCaseIsExecutedRepositoryIsCalled() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
+        val page = 1
+        val result = PageDataModel.NewData(page, getObjectsList())
         coEvery {
             repository.getObjects(any())
-        } returns flow
-        val page = 1
+        } returns result
 
         // When
-        useCase = GetObjectsListUseCase(repository)
+        useCase = GetObjectsListPageUseCase(repository)
         useCase.execute(page)
 
         // Then
@@ -50,22 +45,17 @@ class GetObjectsListUseCaseTest {
     @Test
     fun whenUseCaseIsExecutedUseCaseReturnsObjectsList() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectsList())
-        }
+        val page = 1
+        val result = PageDataModel.NewData(page, getObjectsList())
         coEvery {
             repository.getObjects(any())
-        } returns flow
-        val page = 1
+        } returns result
 
         // When
-        useCase = GetObjectsListUseCase(repository)
+        useCase = GetObjectsListPageUseCase(repository)
 
         // Then
-        useCase.execute(page).test {
-            assertEquals(getObjectsList(), awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(PageDataModel.NewData(page, getObjectsList()), useCase.execute(page))
     }
 
     @After

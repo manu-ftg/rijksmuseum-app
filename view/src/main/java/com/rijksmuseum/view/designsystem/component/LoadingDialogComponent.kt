@@ -2,9 +2,7 @@ package com.rijksmuseum.view.designsystem.component
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,13 +21,13 @@ fun LoadingComponent() {
     ) {
         Surface(
             elevation = 2.dp,
-            shape = RoundedCornerShape(4.dp)
+            shape = RijksmuseumTheme.shapes.small
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .padding(24.dp),
+                    .padding(RijksmuseumTheme.spacing.x6),
                 strokeWidth = 2.dp,
-                color = MaterialTheme.colors.primary
+                color = RijksmuseumTheme.colorScheme.primary
             )
         }
     }

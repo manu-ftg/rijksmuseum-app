@@ -1,5 +1,8 @@
 package com.rijksmuseum.view.designsystem.view.topbar
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -12,13 +15,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rijksmuseum.view.R
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.navigation.RijksmuseumNavHost
+import com.rijksmuseum.view.util.LightAndDarkPreviews
 
 @Composable
 fun TopBarComponent(
@@ -33,7 +35,7 @@ fun TopBarComponent(
             Text(text = stringResource(id = R.string.top_bar_title))
         },
         navigationIcon = {
-            if (isBackButtonVisible) {
+            AnimatedVisibility(visible = isBackButtonVisible, enter = fadeIn(), exit = fadeOut()) {
                 IconButton(onClick = onBackButtonClicked) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Navigate back")
                 }
@@ -42,10 +44,8 @@ fun TopBarComponent(
     )
 }
 
+@LightAndDarkPreviews
 @Composable
-@Preview(
-    device = Devices.PIXEL_4
-)
 fun TopBarPreview() {
     val navController: NavHostController = rememberNavController()
 

@@ -2,6 +2,7 @@ package com.rijksmuseum.view.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -12,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rijksmuseum.presentation.viewdata.ObjectItemViewData
 import com.rijksmuseum.presentation.viewdata.ScreenState
@@ -27,6 +27,8 @@ import com.rijksmuseum.view.designsystem.component.home.LoaderItemComponent
 import com.rijksmuseum.view.designsystem.component.home.ObjectItemComponent
 import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 import com.rijksmuseum.view.designsystem.view.dialog.DialogComponent
+import com.rijksmuseum.view.util.LightAndDarkPreviews
+import com.rijksmuseum.view.util.RijksmuseumPreview
 
 @Composable
 fun HomeScreen(
@@ -35,7 +37,7 @@ fun HomeScreen(
 ) {
     val state: ScreenState<HomeState> by viewModel.state.collectAsState()
 
-    LaunchedEffect(viewModel.events) {
+    LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HomeEvent.NavigateToDetail -> navigateToDetailScreen(event.objectNumber)
@@ -85,14 +87,16 @@ fun HomeLoadedContent(
     onRetryClicked: () -> Unit,
     onDialogDismissed: () -> Unit
 ) {
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(RijksmuseumTheme.spacing.x4),
+            verticalArrangement = Arrangement.spacedBy(RijksmuseumTheme.spacing.x4)
         ) {
             itemsIndexed(
-                items = state.objectsList,
-                key = { _, item -> item.key }
+                items = state.objectsList
             ) { index, item ->
                 when (item) {
                     is ObjectItemViewData.HeaderItem -> {
@@ -133,10 +137,10 @@ fun HomeLoadedContent(
     }
 }
 
-@Preview(showBackground = true)
+@LightAndDarkPreviews
 @Composable
 fun HomePreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Loaded(
                 HomeState(
@@ -160,10 +164,10 @@ fun HomePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeIsLoadingPreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Loading,
             onItemClicked = {},
@@ -174,10 +178,10 @@ fun HomeIsLoadingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeErrorPreview() {
-    RijksmuseumTheme {
+    RijksmuseumPreview {
         HomeContent(
             state = ScreenState.Error(),
             onItemClicked = {},

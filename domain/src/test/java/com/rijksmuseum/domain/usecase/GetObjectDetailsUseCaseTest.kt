@@ -1,20 +1,16 @@
 package com.rijksmuseum.domain.usecase
 
-import app.cash.turbine.test
 import com.rijksmuseum.domain.model.ObjectDetailsModel
 import com.rijksmuseum.domain.repository.RijksmuseumRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class GetObjectDetailsUseCaseTest {
 
     private lateinit var repository: RijksmuseumRepository
@@ -29,12 +25,10 @@ class GetObjectDetailsUseCaseTest {
     @Test
     fun whenUseCaseIsExecutedRepositoryIsCalled() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectDetailsModel())
-        }
+        val result = Result.success(getObjectDetailsModel())
         coEvery {
             repository.getObjectDetails(any())
-        } returns flow
+        } returns result
         val id = "id"
 
         // When
@@ -50,21 +44,19 @@ class GetObjectDetailsUseCaseTest {
     @Test
     fun whenUseCaseIsExecutedUseCaseReturnsObjectDetails() = runTest {
         // Given
-        val flow = flow {
-            emit(getObjectDetailsModel())
-        }
+        val result = Result.success(getObjectDetailsModel())
         coEvery {
             repository.getObjectDetails(any())
-        } returns flow
+        } returns result
         val id = "id"
 
         // When
         useCase = GetObjectDetailsUseCase(repository)
 
         // Then
-        useCase.execute(id).test {
-            assertEquals(getObjectDetailsModel(), awaitItem())
-            cancelAndIgnoreRemainingEvents()
+        useCase.execute(id).also {
+            assert(it.isSuccess)
+            Assert.assertEquals(Result.success(getObjectDetailsModel()), it)
         }
     }
 

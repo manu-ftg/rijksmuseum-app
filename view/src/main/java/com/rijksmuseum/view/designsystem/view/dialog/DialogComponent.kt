@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -54,14 +53,14 @@ fun DialogComponent(
                         text = title,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h6
+                        style = RijksmuseumTheme.typography.h6
                     )
                     subtitle?.let {
                         Text(
                             text = subtitle,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body1
+                            style = RijksmuseumTheme.typography.body1
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))

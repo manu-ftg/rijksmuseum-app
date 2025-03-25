@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rijksmuseum.view.designsystem.theme.RijksmuseumTheme
 
 @Composable
 fun LoadingScreenComponent() {
@@ -18,14 +18,14 @@ fun LoadingScreenComponent() {
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(RijksmuseumTheme.spacing.x6),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .padding(24.dp),
+                    .padding(RijksmuseumTheme.spacing.x6),
                 strokeWidth = 2.dp,
-                color = MaterialTheme.colors.primary
+                color = RijksmuseumTheme.colorScheme.primary
             )
         }
     }
