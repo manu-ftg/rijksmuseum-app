@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,10 +37,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun loadObjects() {
-        val shouldLoadItems = when (val currentState = _state.value) {
-            is ScreenState.Loaded -> {
-                if (currentState.content.shouldLoadMoreItems && !currentState.content.isLoadingMore) {
-                    _state.update {
+        if (shouldLoadMoreItems()) {
+            _state.update { currentState ->
+                when (currentState) {
+                    is ScreenState.Loaded -> {
                         ScreenState.Loaded(
                             currentState.content.copy(
                                 isLoadingMore = true,
@@ -47,22 +48,16 @@ class HomeViewModel @Inject constructor(
                             )
                         )
                     }
-                    true
-                } else {
-                    false
+                    else -> {
+                        ScreenState.Loading
+                    }
                 }
             }
-            else -> {
-                _state.update {
-                    ScreenState.Loading
-                }
-                true
-            }
-        }
-        if (shouldLoadItems) {
+
             viewModelScope.launch(dispatcherProvider.main) {
-                val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
-                _state.update { currentState ->
+                val newState = withContext(dispatcherProvider.io) {
+                    val result = getObjectsListPageUseCase.execute(currentPage?.let { it + 1 })
+                    val currentState = _state.value
                     when (result) {
                         is PageDataModel.NewData -> {
                             currentPage = result.page
@@ -87,19 +82,16 @@ class HomeViewModel @Inject constructor(
                             } ?: ScreenState.Error()
                         }
                         is PageDataModel.Error -> {
-                            when (currentState) {
-                                is ScreenState.Loaded -> {
-                                    ScreenState.Loaded(
-                                        currentState.content.copy(isLoadingMore = false, showError = true)
-                                    )
-                                }
-                                else -> {
-                                    ScreenState.Error()
-                                }
-                            }
+                            (currentState as? ScreenState.Loaded)?.content?.let { content ->
+                                ScreenState.Loaded(
+                                    content.copy(isLoadingMore = false, showError = true)
+                                )
+                            } ?: ScreenState.Error()
                         }
+
                     }
                 }
+                _state.update { newState }
             }
         }
     }
@@ -128,6 +120,10 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun shouldLoadMoreItems(): Boolean {
+        return (_state.value as? ScreenState.Loaded)?.content?.shouldLoadMoreItems ?: true
     }
 }
 
